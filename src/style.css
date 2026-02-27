@@ -1571,7 +1571,7 @@ span { color: var(--main-color); }
     align-items: center;
     flex-wrap: wrap;
     padding: 2rem 7%;
-    background: linear-gradient(135deg, var(--main-color), #0078a0);
+    background: linear-gradient(135deg, var(--main-color), #f2f2f2);
     position: relative;
     overflow: hidden;
 }
@@ -1580,7 +1580,7 @@ span { color: var(--main-color); }
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(270deg, rgba(124,58,237,0.4), transparent, rgba(28,178,223,0.3));
+    background: linear-gradient(270deg, rgba(204, 191, 191, 0.4), transparent, rgba(242, 243, 244, 0.3));
     background-size: 400% 400%;
     animation: footerGlow 8s ease infinite;
 }
@@ -1593,7 +1593,7 @@ span { color: var(--main-color); }
 
 .footer-text p {
     font-size: 1.6rem;
-    color: rgba(255,255,255,0.9);
+    color: rgba(246, 243, 243, 0.9);
     position: relative;
     z-index: 1;
 }
@@ -1613,7 +1613,7 @@ span { color: var(--main-color); }
 
 .footer-iconTop a:hover {
     background: #fff;
-    box-shadow: 0 0 20px rgba(255,255,255,0.5);
+    box-shadow: 0 0 20px rgba(225, 223, 223, 0.5);
     transform: translateY(-3px);
 }
 

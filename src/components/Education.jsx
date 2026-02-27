@@ -4,7 +4,7 @@ export default function Education() {
   const schools = [
     {
       name: 'National University Lipa',
-      year: 'Bachelor of Science in Computer Sience (2022 - 2026)',
+      year: 'Bachelor of Science in Computer Science (2022 - 2026)',
       location: 'SM City Lipa, Ayala Highway, Lipa City, Philippines',
       img: '/images/college.jpg',
     },
