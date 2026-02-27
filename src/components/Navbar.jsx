@@ -20,7 +20,7 @@ export default function Navbar({ activeSection, navigateTo }) {
     { id: 'skills',    label: 'Skills' },
     { id: 'services',  label: 'Project' },
     { id: 'education', label: 'Education' },
-    { id: 'contact',   label: 'Experience' },
+    { id: 'contact',   label: 'Socials' },
   ];
 
   return (

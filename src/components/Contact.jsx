@@ -177,7 +177,7 @@ function CopyEmail({ email }) {
 export default function Contact() {
   return (
     <section className="contact" id="contact">
-      <h2 className="heading">My <span>Experience</span></h2>
+      <h2 className="heading">My <span>Socials</span></h2>
 
       {/* GitHub Stats */}
       <GitHubStats username="patrickeva" />
