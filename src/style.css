@@ -3615,3 +3615,175 @@ span { color: var(--main-color); }
     font-size: 0.8rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   SKILLS SECTION  –  i-paste sa iyong CSS file
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Grid layout ─────────────────────────────────────────── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.8rem;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.2rem;
+}
+
+/* ── Skill card ───────────────────────────────────────────── */
+.skill-card {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 2rem 2.2rem;
+  border-radius: 24px;
+
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1.5px solid rgba(14, 165, 233, 0.18);
+  box-shadow:
+    0 4px 24px rgba(14, 165, 233, 0.09),
+    0 1px 4px rgba(0, 0, 0, 0.05);
+
+  /* Slide-up entrance */
+  opacity: 0;
+  transform: translateY(28px);
+  animation: skillCardIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.28s, border-color 0.28s;
+}
+
+.skill-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--accent, #0ea5e9);
+  box-shadow:
+    0 16px 40px rgba(14, 165, 233, 0.18),
+    0 0 0 3px color-mix(in srgb, var(--accent, #0ea5e9) 14%, transparent);
+}
+
+@keyframes skillCardIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Icon bubble ──────────────────────────────────────────── */
+.skill-icon-wrap {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: color-mix(in srgb, var(--accent, #0ea5e9) 12%, white);
+  border: 2px solid color-mix(in srgb, var(--accent, #0ea5e9) 28%, transparent);
+
+  transition: background 0.25s, transform 0.25s;
+}
+
+.skill-card:hover .skill-icon-wrap {
+  background: color-mix(in srgb, var(--accent, #0ea5e9) 22%, white);
+  transform: rotate(-6deg) scale(1.12);
+}
+
+.skill-icon {
+  font-size: 2.8rem;
+  color: var(--accent, #0ea5e9);
+  line-height: 1;
+}
+
+/* ── Text + bar wrapper ───────────────────────────────────── */
+.skill-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.85rem;
+}
+
+.skill-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: 0.01em;
+}
+
+.skill-percent {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--accent, #0ea5e9);
+}
+
+/* ── Progress track ───────────────────────────────────────── */
+.skill-track {
+  position: relative;
+  height: 10px;
+  border-radius: 99px;
+  background: rgba(14, 165, 233, 0.12);
+  overflow: visible;
+}
+
+/* Animated fill */
+.skill-fill {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent, #0ea5e9) 65%, white),
+    var(--accent, #0ea5e9)
+  );
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent, #0ea5e9) 55%, transparent);
+  transition: width 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Dot at end of bar */
+.skill-dot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent, #0ea5e9);
+  border: 3px solid white;
+  box-shadow: 0 0 10px var(--accent, #0ea5e9);
+  transition: left 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 2;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .skill-card {
+    padding: 1.4rem 1.5rem;
+    gap: 1.1rem;
+  }
+  .skill-icon-wrap {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+  }
+  .skill-icon {
+    font-size: 2.2rem;
+  }
+  .skill-name {
+    font-size: 1rem;
+  }
+  .skill-percent {
+    font-size: 0.95rem;
+  }
+}
