@@ -9,7 +9,6 @@ export default function Home() {
     try {
       await navigator.clipboard.writeText(email);
     } catch {
-      // fallback for older browsers
       const el = document.createElement("textarea");
       el.value = email;
       document.body.appendChild(el);
@@ -26,19 +25,29 @@ export default function Home() {
       <div className="home-content">
         <h3>Hello, I am</h3>
         <h1>PATRICK EVA</h1>
-        <p>Bachelor of Science in Computer Science</p>
+        <p className="home-degree">Bachelor of Science in Computer Science</p>
 
-        <div className="social-media">
-          <a href="https://www.facebook.com/ptrkrmseva/">
-            <i className="bx bxl-facebook"></i>
-          </a>
-          <a href="https://www.instagram.com/_ptrkeva/">
-            <i className="bx bxl-instagram-alt"></i>
-          </a>
-          <a href="https://www.linkedin.com/in/patrick-eva-a8b249364/">
-            <i className="bx bxl-linkedin"></i>
-          </a>
-        </div>
+        {/* Details — role, email, location */}
+        <ul className="home-details">
+          <li>
+            <span className="home-details-icon">
+              <i className="bx bx-code-alt"></i>
+            </span>
+            <span>Web Developer</span>
+          </li>
+          <li>
+            <span className="home-details-icon">
+              <i className="bx bx-envelope"></i>
+            </span>
+            <span>patrickramoseva@gmail.com</span>
+          </li>
+          <li>
+            <span className="home-details-icon">
+              <i className="bx bx-map"></i>
+            </span>
+            <span>Cuenca, Batangas</span>
+          </li>
+        </ul>
 
         <div className="home-buttons">
           <a

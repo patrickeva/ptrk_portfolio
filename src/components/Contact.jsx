@@ -1,5 +1,30 @@
 import { useState } from "react";
 
+// ── Social Links Data ───────────────────────────────────────
+const socialLinks = [
+  {
+    id: "github",
+    label: "GitHub",
+    icon: "bxl-github",
+    url: "https://github.com/patrickeva",
+    color: "#24292e",
+  },
+  {
+    id: "linkedin",
+    label: "LinkedIn",
+    icon: "bxl-linkedin-square",
+    url: "https://www.linkedin.com/in/patrickeva/",
+    color: "#0a66c2",
+  },
+  {
+    id: "facebook",
+    label: "Facebook",
+    icon: "bxl-facebook-square",
+    url: "https://www.facebook.com/ptrkrmseva",   
+    color: "#1877f2",
+  },
+];
+
 // ── GitHub Stats Component ──────────────────────────────────
 function GitHubStats({ username }) {
   const [user, setUser]       = useState(null);
@@ -78,6 +103,29 @@ function GitHubStats({ username }) {
   );
 }
 
+// ── Social Links Bar ────────────────────────────────────────
+function SocialBar() {
+  return (
+    <div className="social-bar">
+      {socialLinks.map((s) => (
+        <a
+          key={s.id}
+          href={s.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-bar__btn"
+          aria-label={s.label}
+          title={s.label}
+          style={{ "--brand": s.color }}
+        >
+          <i className={`bx ${s.icon}`} />
+          <span>{s.label}</span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
 // ── Copy to Clipboard Email ─────────────────────────────────
 function CopyEmail({ email }) {
   const [copied, setCopied] = useState(false);
@@ -88,7 +136,6 @@ function CopyEmail({ email }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      // fallback for older browsers
       const el = document.createElement("textarea");
       el.value = email;
       document.body.appendChild(el);
@@ -134,6 +181,9 @@ export default function Contact() {
 
       {/* GitHub Stats */}
       <GitHubStats username="patrickeva" />
+
+      {/* ── Social Links — between GitHub Stats and email ── */}
+      <SocialBar />
 
       {/* Copy Email */}
       <CopyEmail email="patrickramoseva@gmail.com" />
