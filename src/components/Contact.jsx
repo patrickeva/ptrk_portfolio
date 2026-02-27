@@ -1,103 +1,142 @@
-import { useState, useEffect } from "react";
-import emailjs from "@emailjs/browser";
+import { useState } from "react";
 
-export default function Contact() {
+// ── GitHub Stats Component ──────────────────────────────────
+function GitHubStats({ username }) {
+  const [user, setUser]       = useState(null);
+  const [commits, setCommits] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: ""
-  });
+  useState(() => {
+    async function fetchStats() {
+      try {
+        const [userRes, eventsRes] = await Promise.all([
+          fetch(`https://api.github.com/users/${username}`),
+          fetch(`https://api.github.com/users/${username}/events/public?per_page=100`),
+        ]);
+        const userData   = await userRes.json();
+        const eventsData = await eventsRes.json();
 
-  const [status, setStatus] = useState("");
+        const pushCommits = Array.isArray(eventsData)
+          ? eventsData
+              .filter((e) => e.type === "PushEvent")
+              .reduce((sum, e) => sum + (e.payload?.commits?.length || 0), 0)
+          : 0;
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+        setUser(userData);
+        setCommits(pushCommits);
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchStats();
+  }, []);
 
-  const handleSubmit = (e) => {
-  e.preventDefault();
-  const form = { ...formData };
-
-  const templateParams = {
-    from_name: form.name,
-    reply_to: form.email,
-    message: form.message,
-  };
-
-  emailjs
-    .send("service_x4laam8", "template_5t2xequ", templateParams, "kXRnZGC8s0ijWdYpj")
-    .then((res) => {
-      console.log('EmailJS sent', res);
-      setStatus("SUCCESS");
-      setFormData({ name: "", email: "", message: "" });
-    })
-    .catch((error) => {
-      console.error("EmailJS error:", error);
-      setStatus("ERROR");
-      // Fallback: open user's mail client with prefilled message so sender can still contact you
-      const subject = form.name ? `${form.name} - Message from portfolio` : 'Message from portfolio';
-      const body = `${form.message}\n\nFrom: ${form.name}\nEmail: ${form.email}`;
-      window.location.href = `mailto:patrickramoseva@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    });
-  };
-
-  // useEffect(() => {
-  //   // initialize EmailJS with your public key (optional if you pass key to send)
-  //   try {
-  //     emailjs.init("j8T261AMJnApBUZuP");
-  //   } catch (e) {
-  //     console.warn('EmailJS init warning', e);
-  //   }
-  // }, []);
+  const stats = user ? [
+    { label: "Repos",     value: user.public_repos ?? "–", icon: "bx bx-book-content" },
+    { label: "Commits",   value: commits !== null ? `${commits}+` : "–", icon: "bx bx-git-commit" },
+    { label: "Followers", value: user.followers ?? "–", icon: "bx bx-user-check" },
+    { label: "Following", value: user.following ?? "–", icon: "bx bx-user-plus" },
+  ] : [];
 
   return (
-    <section className="contact" id="contact">
-      <h2 className="heading">Contact <span>Me!</span></h2>
+    <div className="gh-stats-wrapper">
+      <h3 className="gh-stats-heading">
+        <i className="bx bxl-github" /> GitHub Stats
+      </h3>
 
-      <form onSubmit={handleSubmit}>
-        <div className="input-box">
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+      {loading && <p className="gh-loading">Loading stats…</p>}
+      {error   && <p className="gh-error">Could not load GitHub stats.</p>}
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+      {!loading && !error && user && (
+        <div className="gh-stats-grid">
+          <a
+            href={user.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="gh-profile-card"
+          >
+            <img src={user.avatar_url} alt={user.login} className="gh-avatar" />
+            <div className="gh-profile-info">
+              <span className="gh-username">@{user.login}</span>
+              <span className="gh-view">View profile →</span>
+            </div>
+          </a>
+
+          {stats.map((s) => (
+            <div key={s.label} className="gh-stat-card">
+              <i className={s.icon} />
+              <span className="gh-stat-value">{s.value}</span>
+              <span className="gh-stat-label">{s.label}</span>
+            </div>
+          ))}
         </div>
-
-        <textarea
-          name="message"
-          placeholder="Your Message"
-          rows="10"
-          value={formData.message}
-          onChange={handleChange}
-          required
-        ></textarea>
-
-        <input type="submit" value="Send Message" className="btn"/>
-      </form>
-
-      {status === "SUCCESS" && (
-        <p className="success">✅ Message Sent Successfully!</p>
       )}
+    </div>
+  );
+}
 
-      {status === "ERROR" && (
-        <p className="error">❌ Failed to send message.</p>
+// ── Copy to Clipboard Email ─────────────────────────────────
+function CopyEmail({ email }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // fallback for older browsers
+      const el = document.createElement("textarea");
+      el.value = email;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
+
+  return (
+    <div className="copy-email-wrapper">
+      <p className="copy-email-label">Get in touch</p>
+      <div className="copy-email-box">
+        <i className="bx bx-envelope copy-email-icon" />
+        <span className="copy-email-text">{email}</span>
+        <button
+          className={`copy-email-btn${copied ? " copy-email-btn--copied" : ""}`}
+          onClick={handleCopy}
+          aria-label="Copy email"
+        >
+          {copied
+            ? <><i className="bx bx-check" /> Copied!</>
+            : <><i className="bx bx-copy" /> Copy</>
+          }
+        </button>
+      </div>
+      {copied && (
+        <p className="copy-email-confirm">
+          ✅ Email copied to clipboard!
+        </p>
       )}
+    </div>
+  );
+}
+
+// ── Contact Section ─────────────────────────────────────────
+export default function Contact() {
+  return (
+    <section className="contact" id="contact">
+      <h2 className="heading">My <span>Experience</span></h2>
+
+      {/* GitHub Stats */}
+      <GitHubStats username="patrickeva" />
+
+      {/* Copy Email */}
+      <CopyEmail email="patrickramoseva@gmail.com" />
     </section>
   );
 }

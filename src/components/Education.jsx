@@ -5,7 +5,7 @@ export default function Education() {
     {
       name: 'National University Lipa',
       year: 'Bachelor of Science in Computer Science (2022 - 2026)',
-      location: 'SM City Lipa, Ayala Highway, Lipa City, Philippines',
+      location: 'Lipa City, Batangas',
       img: '/images/college.jpg',
     },
     {

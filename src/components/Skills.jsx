@@ -1,10 +1,10 @@
 const skillData = [
-  { name: "HTML & CSS", level: "90%" },
-  { name: "JavaScript", level: "85%" },
-  { name: "React", level: "80%" },
-  { name: "Backend Development", level: "75%" },
-  { name: "Python", level: "82%" },
-  { name: "Machine Learning", level: "78%" },
+  { name: "HTML & CSS", level: "70%" },
+  { name: "JavaScript", level: "60%" },
+  { name: "React", level: "60%" },
+  { name: "Backend Development", level: "60%" },
+  { name: "Python", level: "70%" },
+  { name: "Machine Learning", level: "70%" },
 ];
 
 export default function Skills() {

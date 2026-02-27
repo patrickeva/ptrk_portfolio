@@ -1,4 +1,26 @@
+import { useState } from "react";
+
 export default function Home() {
+  const [copied, setCopied] = useState(false);
+
+  const handleContactClick = async (e) => {
+    e.preventDefault();
+    const email = "patrickramoseva@gmail.com";
+    try {
+      await navigator.clipboard.writeText(email);
+    } catch {
+      // fallback for older browsers
+      const el = document.createElement("textarea");
+      el.value = email;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
   return (
     <section className="home site-section" id="home">
       <div className="home-content">
@@ -28,9 +50,22 @@ export default function Home() {
             View Resume
           </a>
 
-          <a href="#contact" className="btn">
-            Contact Me
-          </a>
+          <button
+            className={`btn home-contact-btn${copied ? " home-contact-btn--copied" : ""}`}
+            onClick={handleContactClick}
+          >
+            {copied ? (
+              <><i className="bx bx-check" /> Copied!</>
+            ) : (
+              <><i className="bx bx-envelope" /> Contact Me</>
+            )}
+          </button>
+        </div>
+
+        {/* Toast notification */}
+        <div className={`home-copy-toast${copied ? " home-copy-toast--show" : ""}`}>
+          <i className="bx bx-check-circle" />
+          patrickramoseva@gmail.com copied!
         </div>
       </div>
 
