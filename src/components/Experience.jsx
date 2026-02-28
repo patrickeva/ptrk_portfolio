@@ -43,33 +43,33 @@ const projects = [
   },
 ];
 
-function useVisibleCount() {
-  const [visibleCount, setVisibleCount] = useState(() =>
-    window.innerWidth < 768 ? 1 : window.innerWidth < 1100 ? 2 : 3
-  );
+const GAP = 24; // must match CSS gap value in px
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) setVisibleCount(1);
-      else if (window.innerWidth < 1100) setVisibleCount(2);
-      else setVisibleCount(3);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return visibleCount;
+function getVisibleCount() {
+  if (typeof window === "undefined") return 3;
+  if (window.innerWidth < 768) return 1;
+  if (window.innerWidth < 1100) return 2;
+  return 3;
 }
 
 export default function Experience() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
-  const visibleCount = useVisibleCount();
+  const [visibleCount, setVisibleCount] = useState(getVisibleCount);
+  const touchStartX = useRef(null);
+
   const maxIndex = projects.length - visibleCount;
 
-  // Touch/swipe support
-  const touchStartX = useRef(null);
-  const touchEndX = useRef(null);
+  useEffect(() => {
+    const handleResize = () => setVisibleCount(getVisibleCount());
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Clamp current index when screen size changes
+  useEffect(() => {
+    setCurrent((c) => Math.min(c, Math.max(0, projects.length - visibleCount)));
+  }, [visibleCount]);
 
   const next = useCallback(() => {
     setCurrent((c) => (c >= maxIndex ? 0 : c + 1));
@@ -77,11 +77,6 @@ export default function Experience() {
 
   const prev = useCallback(() => {
     setCurrent((c) => (c <= 0 ? maxIndex : c - 1));
-  }, [maxIndex]);
-
-  // Reset current if visibleCount changes and current is out of bounds
-  useEffect(() => {
-    setCurrent((c) => Math.min(c, maxIndex));
   }, [maxIndex]);
 
   useEffect(() => {
@@ -96,18 +91,18 @@ export default function Experience() {
   };
 
   const handleTouchEnd = (e) => {
-    touchEndX.current = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 40) {
-      if (diff > 0) next();
-      else prev();
-    }
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
     setPaused(false);
   };
 
-  // Gap between cards in px — must match CSS
-  const gap = 24;
-  const translateX = `calc(${current} * (-100% - ${gap}px) / ${visibleCount})`;
+  // Correct formula:
+  // card width = (100% - (visible-1)*GAP) / visible
+  // step size  = card width + GAP = (100% + GAP) / visible
+  // translateX = current * step size
+  const pct = (100 / visibleCount).toFixed(6);
+  const gapPx = (GAP / visibleCount).toFixed(6);
+  const translateX = `calc(${current} * -1 * (${pct}% + ${gapPx}px))`;
 
   return (
     <section
@@ -121,7 +116,6 @@ export default function Experience() {
       </h2>
 
       <div className="projects-slider-wrapper">
-        {/* Prev button — rendered outside the overflow-hidden track */}
         <button
           className="slider-btn prev"
           onClick={prev}
@@ -146,20 +140,15 @@ export default function Experience() {
                   <img src={project.image} alt={project.title} />
                   <div className="project-img-shine" />
                 </div>
-
                 <div className="project-body">
                   <h3 className="project-title">{project.title}</h3>
                   <p className="project-subtitle">{project.subtitle}</p>
                   <p className="project-desc">{project.description}</p>
-
                   <div className="project-tags">
                     {project.tags.map((tag) => (
-                      <span key={tag} className="project-tag">
-                        {tag}
-                      </span>
+                      <span key={tag} className="project-tag">{tag}</span>
                     ))}
                   </div>
-
                   <a
                     href={project.link}
                     target="_blank"
@@ -175,7 +164,6 @@ export default function Experience() {
           </div>
         </div>
 
-        {/* Next button */}
         <button
           className="slider-btn next"
           onClick={next}

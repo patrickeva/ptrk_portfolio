@@ -4614,3 +4614,266 @@ span { color: var(--main-color); }
         color: #ffffff !important;
     }
 }
+/* ============================================================
+   PROJECTS SLIDER — FINAL COMPLETE FIX
+   I-paste sa PINAKA-DULO ng style.css
+   Ino-override ang lahat ng lumang project slider CSS
+============================================================ */
+
+/* ══════════════════════════════════════════
+   SLIDER LAYOUT
+   ══════════════════════════════════════════ */
+
+.projects-slider-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;          /* ← CRITICAL: remove padding: 0 72px */
+    box-sizing: border-box !important;
+    position: static !important;
+}
+
+.projects-slider {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+.projects-track {
+    display: flex !important;
+    gap: 24px !important;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: transform !important;
+    align-items: stretch !important;
+}
+
+/* ══════════════════════════════════════════
+   ARROW BUTTONS — always beside slider
+   ══════════════════════════════════════════ */
+.slider-btn {
+    position: static !important;
+    transform: none !important;
+    flex-shrink: 0 !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.8rem !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    transition: all 0.25s ease !important;
+    background: rgba(255, 255, 255, 0.80) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1.5px solid rgba(28, 178, 223, 0.35) !important;
+    color: #1CB2DF !important;
+    box-shadow: 0 4px 16px rgba(28, 178, 223, 0.15) !important;
+}
+
+.slider-btn:hover {
+    background: #1CB2DF !important;
+    color: #fff !important;
+    box-shadow: 0 8px 24px rgba(28, 178, 223, 0.40) !important;
+    transform: scale(1.08) !important;
+}
+
+.slider-btn:active {
+    transform: scale(0.94) !important;
+}
+
+/* ══════════════════════════════════════════
+   CARD WIDTH — Desktop / Tablet / Mobile
+   ══════════════════════════════════════════ */
+.project-card {
+    flex: 0 0 calc((100% - 48px) / 3) !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 1099px) {
+    .project-card {
+        flex: 0 0 calc((100% - 24px) / 2) !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .project-card {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+    }
+
+    .projects-slider-wrapper {
+        gap: 8px !important;
+    }
+
+    .slider-btn {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        font-size: 1.6rem !important;
+    }
+
+    .project-img-wrapper {
+        height: 185px !important;
+    }
+
+    .project-body {
+        padding: 18px 18px 16px !important;
+        gap: 8px !important;
+    }
+
+    .project-title  { font-size: 1.12rem !important; }
+    .project-desc   { font-size: 0.9rem !important; line-height: 1.65 !important; }
+    .project-tag    { font-size: 0.67rem !important; }
+    .project-btn    { font-size: 0.9rem !important; padding: 12px !important; }
+}
+
+@media (max-width: 400px) {
+    .slider-btn {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        font-size: 1.4rem !important;
+    }
+}
+
+/* ══════════════════════════════════════════
+   DOTS
+   ══════════════════════════════════════════ */
+.slider-dots {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    margin-top: 32px !important;
+}
+
+.slider-dot {
+    width: 9px !important;
+    height: 9px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    background: rgba(28, 178, 223, 0.25) !important;
+    transition: background 0.25s, transform 0.25s !important;
+}
+
+.slider-dot.active {
+    background: #1CB2DF !important;
+    transform: scale(1.45) !important;
+}
+
+/* ══════════════════════════════════════════
+   LIGHT MODE — card background (FIX)
+   ══════════════════════════════════════════ */
+.project-card {
+    background: rgba(255, 255, 255, 0.82) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(28, 178, 223, 0.20) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 1px 0 rgba(255, 255, 255, 0.9) inset !important;
+    border-radius: 22px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    cursor: pointer !important;
+    transition:
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.35s ease,
+        border-color 0.35s ease !important;
+}
+
+.project-card:hover {
+    transform: translateY(-10px) scale(1.02) !important;
+    border-color: rgba(28, 178, 223, 0.45) !important;
+    box-shadow:
+        0 24px 60px rgba(28, 178, 223, 0.20),
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 0 0 1.5px rgba(28, 178, 223, 0.35) !important;
+}
+
+/* Light mode text colors */
+.project-title    { color: #111827 !important; }
+.project-subtitle { color: #0088cc !important; }
+.project-desc     { color: #374151 !important; }
+
+.project-card:hover .project-title { color: #0077cc !important; }
+
+.project-tag {
+    background: rgba(0, 170, 255, 0.08) !important;
+    border: 1.5px solid rgba(0, 170, 255, 0.30) !important;
+    color: #0369a1 !important;
+}
+
+/* ══════════════════════════════════════════
+   DARK MODE — card
+   ══════════════════════════════════════════ */
+.dark-mode .project-card {
+    background: rgba(12, 18, 52, 0.85) !important;
+    border: 1.5px solid rgba(28, 178, 223, 0.22) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35),
+        0 1px 0 rgba(28, 178, 223, 0.08) inset !important;
+}
+
+.dark-mode .project-card:hover {
+    border-color: rgba(28, 178, 223, 0.50) !important;
+    box-shadow:
+        0 24px 60px rgba(28, 178, 223, 0.18),
+        0 8px 24px rgba(0, 0, 0, 0.30),
+        0 0 0 1.5px rgba(28, 178, 223, 0.35) !important;
+}
+
+.dark-mode .project-title    { color: #e2e8f0 !important; }
+.dark-mode .project-subtitle { color: #38bdf8 !important; }
+.dark-mode .project-desc     { color: #94a3b8 !important; }
+
+.dark-mode .project-card:hover .project-title { color: #1CB2DF !important; }
+
+.dark-mode .project-tag {
+    background: rgba(28, 178, 223, 0.12) !important;
+    border: 1.5px solid rgba(28, 178, 223, 0.28) !important;
+    color: #7dd3fc !important;
+}
+
+/* Dark mode — arrow buttons */
+.dark-mode .slider-btn {
+    background: rgba(8, 14, 50, 0.85) !important;
+    border: 1.5px solid rgba(28, 178, 223, 0.35) !important;
+    color: #1CB2DF !important;
+}
+
+.dark-mode .slider-btn:hover {
+    background: rgba(28, 178, 223, 0.22) !important;
+    color: #fff !important;
+}
+
+/* prefers-color-scheme dark fallback */
+@media (prefers-color-scheme: dark) {
+    .project-card {
+        background: rgba(12, 18, 52, 0.85) !important;
+        border: 1.5px solid rgba(28, 178, 223, 0.22) !important;
+    }
+    .project-title    { color: #e2e8f0 !important; }
+    .project-subtitle { color: #38bdf8 !important; }
+    .project-desc     { color: #94a3b8 !important; }
+    .project-tag {
+        background: rgba(28, 178, 223, 0.12) !important;
+        border: 1.5px solid rgba(28, 178, 223, 0.28) !important;
+        color: #7dd3fc !important;
+    }
+    .slider-btn {
+        background: rgba(8, 14, 50, 0.85) !important;
+        border: 1.5px solid rgba(28, 178, 223, 0.35) !important;
+        color: #1CB2DF !important;
+    }
+}
