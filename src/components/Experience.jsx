@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
-/* ─── Project data ─────────────────────────────────────── */
 const projects = [
   {
     id: 1,
@@ -35,7 +34,7 @@ const projects = [
   {
     id: 4,
     image: "/images/NU_Admission.jpg",
-    title: "AI-Powered Admission System – NU Lipa",
+    title: "AI-Powered Admission System - NU Lipa",
     subtitle: "Admission System with Future ML Integration",
     description:
       "A Django-based student admission system for NU Lipa, allowing student registration, admin management, and future ML integration for processing applications.",
@@ -44,46 +43,33 @@ const projects = [
   },
 ];
 
-const TRACK_GAP = 24; // px — must match CSS gap on .projects-track
+const GAP = 24; // must match CSS gap value in px
 
-function getVisible(sliderWidth) {
-  if (sliderWidth < 768) return 1;
-  if (sliderWidth < 1100) return 2;
+function getVisibleCount() {
+  if (typeof window === "undefined") return 3;
+  if (window.innerWidth < 768) return 1;
+  if (window.innerWidth < 1100) return 2;
   return 3;
 }
 
 export default function Experience() {
-  const [current, setCurrent]           = useState(0);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const [paused, setPaused]             = useState(false);
-
-  const sliderRef   = useRef(null);
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(getVisibleCount);
   const touchStartX = useRef(null);
 
-  /* ResizeObserver on the slider clip element itself */
+  const maxIndex = projects.length - visibleCount;
+
   useEffect(() => {
-    const el = sliderRef.current;
-    if (!el) return;
-
-    const apply = (width) => {
-      const next = getVisible(width);
-      setVisibleCount((prev) => {
-        if (prev === next) return prev;
-        setCurrent((c) => Math.min(c, Math.max(0, projects.length - next)));
-        return next;
-      });
-    };
-
-    apply(el.offsetWidth); // ← runs immediately on mount (key fix for mobile)
-
-    const ro = new ResizeObserver((entries) => {
-      for (const e of entries) apply(e.contentRect.width);
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
+    const handleResize = () => setVisibleCount(getVisibleCount());
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const maxIndex = Math.max(0, projects.length - visibleCount);
+  // Clamp current index when screen size changes
+  useEffect(() => {
+    setCurrent((c) => Math.min(c, Math.max(0, projects.length - visibleCount)));
+  }, [visibleCount]);
 
   const next = useCallback(() => {
     setCurrent((c) => (c >= maxIndex ? 0 : c + 1));
@@ -95,28 +81,27 @@ export default function Experience() {
 
   useEffect(() => {
     if (paused) return;
-    const id = setInterval(next, 3500);
-    return () => clearInterval(id);
+    const timer = setInterval(next, 3000);
+    return () => clearInterval(timer);
   }, [paused, next]);
 
-  const onTouchStart = (e) => {
+  const handleTouchStart = (e) => {
     touchStartX.current = e.changedTouches[0].clientX;
     setPaused(true);
   };
-  const onTouchEnd = (e) => {
+
+  const handleTouchEnd = (e) => {
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
     setPaused(false);
   };
 
-  /*
-   * translateX:
-   *   visible=1 → step = 100% + 24px
-   *   visible=2 → step = 50%  + 12px
-   *   visible=3 → step = 33.333% + 8px
-   */
-  const pct   = (100 / visibleCount).toFixed(6);
-  const gapPx = (TRACK_GAP / visibleCount).toFixed(6);
+  // Correct formula:
+  // card width = (100% - (visible-1)*GAP) / visible
+  // step size  = card width + GAP = (100% + GAP) / visible
+  // translateX = current * step size
+  const pct = (100 / visibleCount).toFixed(6);
+  const gapPx = (GAP / visibleCount).toFixed(6);
   const translateX = `calc(${current} * -1 * (${pct}% + ${gapPx}px))`;
 
   return (
@@ -134,7 +119,7 @@ export default function Experience() {
         <button
           className="slider-btn prev"
           onClick={prev}
-          aria-label="Previous project"
+          aria-label="Previous"
           type="button"
         >
           <i className="bx bx-chevron-left" />
@@ -142,9 +127,8 @@ export default function Experience() {
 
         <div
           className="projects-slider"
-          ref={sliderRef}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           <div
             className="projects-track"
@@ -183,7 +167,7 @@ export default function Experience() {
         <button
           className="slider-btn next"
           onClick={next}
-          aria-label="Next project"
+          aria-label="Next"
           type="button"
         >
           <i className="bx bx-chevron-right" />
@@ -194,10 +178,10 @@ export default function Experience() {
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button
             key={i}
-            type="button"
             className={`slider-dot${current === i ? " active" : ""}`}
             onClick={() => setCurrent(i)}
-            aria-label={`Go to slide ${i + 1}`}
+            aria-label={`Slide ${i + 1}`}
+            type="button"
           />
         ))}
       </div>
