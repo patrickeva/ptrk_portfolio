@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <section className="home site-section" id="home">
       <div className="home-content">
-        <h3>Hello, I am</h3>
+        {/* <h3>Hello, I am</h3> */}
         <h1>PATRICK EVA</h1>
         <p className="home-degree">Bachelor of Science in Computer Science</p>
 
