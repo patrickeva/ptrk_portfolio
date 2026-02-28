@@ -56,20 +56,47 @@ export default function Experience() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [visibleCount, setVisibleCount] = useState(getVisibleCount);
+  const [translatePx, setTranslatePx] = useState(0);
+
   const touchStartX = useRef(null);
+  const sliderRef = useRef(null); // ref to .projects-slider (the overflow:hidden container)
 
   const maxIndex = projects.length - visibleCount;
 
+  // ─── Recalculate pixel offset whenever current or visibleCount changes ───
+  const recalcTranslate = useCallback(() => {
+    if (!sliderRef.current) return;
+    const sliderWidth = sliderRef.current.offsetWidth;
+    // card width = (sliderWidth - (visibleCount - 1) * GAP) / visibleCount
+    const cardWidth = (sliderWidth - (visibleCount - 1) * GAP) / visibleCount;
+    // each step = one card width + one gap
+    const stepSize = cardWidth + GAP;
+    setTranslatePx(current * stepSize);
+  }, [current, visibleCount]);
+
+  // Recalculate on every relevant change
   useEffect(() => {
-    const handleResize = () => setVisibleCount(getVisibleCount());
+    recalcTranslate();
+  }, [recalcTranslate]);
+
+  // Recalculate on window resize (after visibleCount state updates)
+  useEffect(() => {
+    const handleResize = () => {
+      const newCount = getVisibleCount();
+      setVisibleCount(newCount);
+      // Clamp current index
+      setCurrent((c) => Math.min(c, Math.max(0, projects.length - newCount)));
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Clamp current index when screen size changes
+  // Also recalc after resize settles (sliderRef width may have changed)
   useEffect(() => {
-    setCurrent((c) => Math.min(c, Math.max(0, projects.length - visibleCount)));
-  }, [visibleCount]);
+    const handleResize = () => recalcTranslate();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [recalcTranslate]);
 
   const next = useCallback(() => {
     setCurrent((c) => (c >= maxIndex ? 0 : c + 1));
@@ -79,12 +106,14 @@ export default function Experience() {
     setCurrent((c) => (c <= 0 ? maxIndex : c - 1));
   }, [maxIndex]);
 
+  // Auto-slide
   useEffect(() => {
     if (paused) return;
     const timer = setInterval(next, 3000);
     return () => clearInterval(timer);
   }, [paused, next]);
 
+  // Touch handlers
   const handleTouchStart = (e) => {
     touchStartX.current = e.changedTouches[0].clientX;
     setPaused(true);
@@ -95,14 +124,6 @@ export default function Experience() {
     if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
     setPaused(false);
   };
-
-  // Correct formula:
-  // card width = (100% - (visible-1)*GAP) / visible
-  // step size  = card width + GAP = (100% + GAP) / visible
-  // translateX = current * step size
-  const pct = (100 / visibleCount).toFixed(6);
-  const gapPx = (GAP / visibleCount).toFixed(6);
-  const translateX = `calc(${current} * -1 * (${pct}% + ${gapPx}px))`;
 
   return (
     <section
@@ -125,14 +146,18 @@ export default function Experience() {
           <i className="bx bx-chevron-left" />
         </button>
 
+        {/* ← attach ref here so we can measure its width */}
         <div
           className="projects-slider"
+          ref={sliderRef}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
           <div
             className="projects-track"
-            style={{ transform: `translateX(${translateX})` }}
+            style={{
+              transform: `translateX(-${translatePx}px)`,
+            }}
           >
             {projects.map((project) => (
               <div key={project.id} className="project-card">
@@ -146,7 +171,9 @@ export default function Experience() {
                   <p className="project-desc">{project.description}</p>
                   <div className="project-tags">
                     {project.tags.map((tag) => (
-                      <span key={tag} className="project-tag">{tag}</span>
+                      <span key={tag} className="project-tag">
+                        {tag}
+                      </span>
                     ))}
                   </div>
                   <a

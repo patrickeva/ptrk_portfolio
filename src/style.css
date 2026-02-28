@@ -802,13 +802,7 @@ span { color: var(--main-color); }
     z-index: 1;
 }
 
-/* ============================================
-   PROJECTS SECTION
-   → IDADAGDAG SA DULO ng style.css
-   → BURAHIN MUNA ang lahat ng lumang project styles
-   ============================================ */
 
-/* ---- Section heading — matching "Professional Skills" style ---- */
 .services {
   padding: 80px 60px 100px;
 }
@@ -880,13 +874,7 @@ span { color: var(--main-color); }
   transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
   align-items: stretch;
-}/* ============================================================
-   PROJECTS SLIDER — SINGLE CLEAN DEFINITION
-   PALITAN ang LAHAT ng project-related CSS sa style.css
-   mula "PROJECTS SECTION" hanggang katapusan ng file
-   ng block na ito LAMANG
-============================================================ */
-
+}
 /* ── Section wrapper ── */
 .services {
     min-height: 100vh;
@@ -2608,11 +2596,7 @@ span { color: var(--main-color); }
   box-sizing: border-box;
 }
 
-/* ============================================================
-   SIMPLE SMOOTH TRANSITION
-   I-paste sa PINAKA-DULO ng style.css
-   Tanggalin / i-comment out ang lahat ng curtain/page-transition CSS
-============================================================ */
+
 
 /* Smooth fade between sections */
 .section-view {
@@ -2752,21 +2736,6 @@ span { color: var(--main-color); }
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-/* ============================================================
-   PROJECTS GRID — idagdag sa dulo ng style.css
-============================================================ */
 
 .projects-grid {
     display: grid;
@@ -2979,13 +2948,8 @@ span { color: var(--main-color); }
 }
 
 
-
-
-
-
-
 /* ============================================================
-   GITHUB STATS — idagdag sa dulo ng style.css
+   GITHUB STATS
 ============================================================ */
 
 .gh-stats-wrapper {
@@ -3211,11 +3175,6 @@ span { color: var(--main-color); }
     .gh-stat-value { font-size: 1.8rem; }
 }
 
-
-/* ============================================================
-   CONTACT — GitHub Stats + Copy Email
-   Idagdag sa dulo ng style.css
-============================================================ */
 
 /* Override contact section to center content nicely */
 .contact {
@@ -3539,11 +3498,6 @@ span { color: var(--main-color); }
 }
 
 
-/* ============================================================
-   HOME — Contact Me copy button + toast
-   Idagdag sa dulo ng style.css
-============================================================ */
-
 /* Override <button> to match .btn styling */
 .home-contact-btn {
     font-family: 'Poppins', sans-serif;
@@ -3589,11 +3543,7 @@ span { color: var(--main-color); }
     opacity: 1;
     transform: translateY(0);
 }
-/* ============================================================
-   HOME MOBILE FIX
-   I-paste ito sa PINAKA-DULO ng style.css
-   (ino-override ang lahat ng dating home mobile styles)
-============================================================ */
+
 
 @media (max-width: 768px) {
 
@@ -3800,7 +3750,7 @@ span { color: var(--main-color); }
     box-shadow: none !important;
 }
 
-/* Sticky state — glass effect lang, NO solid white */
+/* Sticky state  */
 .header.sticky {
     background: rgba(248, 250, 255, 0.55) !important;
     backdrop-filter: blur(24px) !important;
@@ -3815,9 +3765,7 @@ span { color: var(--main-color); }
     box-shadow: 0 4px 30px rgba(28, 178, 223, 0.12) !important;
 }
 
-/* ============================================================
-   FIX 2 — FOOTER: match the site background, walang nakaka-iba na kulay
-============================================================ */
+
 .footer {
     background: var(--bg-color) !important;
     border-top: 1px solid rgba(28, 178, 223, 0.15) !important;
@@ -3846,24 +3794,20 @@ span { color: var(--main-color); }
     color: var(--main-color) !important;
 }
 
-/* ============================================================
-   FIX 3 — HOME: dagdag na top padding para hindi matakpan ng
-   navbar ang profile image
-   Navbar height ≈ 8rem, kaya 12-13rem ang safe top padding
-============================================================ */
+
 .home {
     padding-top: 13rem !important;
     padding-bottom: 5rem !important;
 }
 
-/* Desktop — sapat na space para lumabas ang buong profile ring */
+
 @media (min-width: 769px) {
     .home {
         padding-top: 14rem !important;
     }
 }
 
-/* Mobile — mas maliit pero sapat pa rin */
+
 @media (max-width: 768px) {
     .home {
         padding-top: 12rem !important;
@@ -3875,11 +3819,6 @@ span { color: var(--main-color); }
         padding-top: 11rem !important;
     }
 }
-
-/* ============================================================
-   HOME DETAILS LIST — role, email, location
-   I-paste sa dulo ng style.css
-============================================================ */
 
 .home-degree {
     font-size: 1.55rem;
@@ -3966,10 +3905,6 @@ span { color: var(--main-color); }
     }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SOCIAL BAR  –  i-paste sa iyong CSS file
-   (matches the light-blue portfolio theme)
-   ═══════════════════════════════════════════════════════════ */
 
 /* Wrapper */
 .social-bar {
@@ -4052,7 +3987,7 @@ span { color: var(--main-color); }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SOCIAL BAR  –  i-paste sa iyong CSS file
+   SOCIAL BAR  –  
    ═══════════════════════════════════════════════════════════ */
 
 /* Wrapper */
@@ -4158,9 +4093,7 @@ span { color: var(--main-color); }
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SKILLS SECTION  –  i-paste sa iyong CSS file
-   ═══════════════════════════════════════════════════════════ */
+
 
 /* ── Grid layout ─────────────────────────────────────────── */
 .skills-grid {
@@ -4412,10 +4345,6 @@ span { color: var(--main-color); }
 .slider-btn:active {
   background: rgba(255, 255, 255, 0.3);
 }
-/* ============================================================
-   DARK MODE — PROJECT CARDS (i-paste sa PINAKA-DULO ng style.css)
-   Matches the dark navy/blue background ng website
-============================================================ */
 
 /* ---- Main project card background ---- */
 @media (prefers-color-scheme: dark) {
@@ -4515,10 +4444,7 @@ span { color: var(--main-color); }
     }
 }
 
-/* ============================================================
-   .dark-mode CLASS SUPPORT (para sa toggle button)
-   Kapag gumagamit ng JS toggle kasabay ng prefers-color-scheme
-============================================================ */
+
 .dark-mode .project-card {
     background: rgba(12, 18, 52, 0.82) !important;
     border: 1.5px solid rgba(28, 178, 223, 0.22) !important;
@@ -4584,11 +4510,6 @@ span { color: var(--main-color); }
     box-shadow: 0 0 10px rgba(28, 178, 223, 0.6) !important;
 }
 
-/* ============================================================
-   PROJECTS SECTION — COMPLETE MOBILE FIX
-   I-paste sa PINAKA-DULO ng style.css
-   (ino-override lahat ng lumang project card mobile styles)
-============================================================ */
 
 /* ── Base: reset slider wrapper para flex layout ── */
 .projects-slider-wrapper {
@@ -4997,11 +4918,6 @@ span { color: var(--main-color); }
         color: #ffffff !important;
     }
 }
-/* ============================================================
-   PROJECTS SLIDER — FINAL COMPLETE FIX
-   I-paste sa PINAKA-DULO ng style.css
-   Ino-override ang lahat ng lumang project slider CSS
-============================================================ */
 
 /* ══════════════════════════════════════════
    SLIDER LAYOUT
@@ -5260,16 +5176,6 @@ span { color: var(--main-color); }
         color: #1CB2DF !important;
     }
 }
-
-/* ============================================================
-   PROJECTS SLIDER — FINAL COMPLETE FIX
-   I-paste sa PINAKA-DULO ng style.css
-   Ino-override ang lahat ng lumang project slider CSS
-============================================================ */
-
-/* ══════════════════════════════════════════
-   SLIDER LAYOUT
-   ══════════════════════════════════════════ */
 
 .projects-slider-wrapper {
     display: flex !important;
