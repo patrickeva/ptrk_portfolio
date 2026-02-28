@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 
 const projects = [
   {
@@ -43,20 +43,46 @@ const projects = [
   },
 ];
 
-const VISIBLE = 3;
-const MAX_INDEX = projects.length - VISIBLE;
+function useVisibleCount() {
+  const [visibleCount, setVisibleCount] = useState(() =>
+    window.innerWidth < 768 ? 1 : window.innerWidth < 1100 ? 2 : 3
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setVisibleCount(1);
+      else if (window.innerWidth < 1100) setVisibleCount(2);
+      else setVisibleCount(3);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return visibleCount;
+}
 
 export default function Experience() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
+  const visibleCount = useVisibleCount();
+  const maxIndex = projects.length - visibleCount;
+
+  // Touch/swipe support
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
 
   const next = useCallback(() => {
-    setCurrent((c) => (c >= MAX_INDEX ? 0 : c + 1));
-  }, []);
+    setCurrent((c) => (c >= maxIndex ? 0 : c + 1));
+  }, [maxIndex]);
 
-  const prev = () => {
-    setCurrent((c) => (c <= 0 ? MAX_INDEX : c - 1));
-  };
+  const prev = useCallback(() => {
+    setCurrent((c) => (c <= 0 ? maxIndex : c - 1));
+  }, [maxIndex]);
+
+  // Reset current if visibleCount changes and current is out of bounds
+  useEffect(() => {
+    setCurrent((c) => Math.min(c, maxIndex));
+  }, [maxIndex]);
 
   useEffect(() => {
     if (paused) return;
@@ -64,7 +90,24 @@ export default function Experience() {
     return () => clearInterval(timer);
   }, [paused, next]);
 
-  const translateX = `calc(${current} * -1 * (100% + 24px) / 3)`;
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.changedTouches[0].clientX;
+    setPaused(true);
+  };
+
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) next();
+      else prev();
+    }
+    setPaused(false);
+  };
+
+  // Gap between cards in px — must match CSS
+  const gap = 24;
+  const translateX = `calc(${current} * (-100% - ${gap}px) / ${visibleCount})`;
 
   return (
     <section
@@ -78,11 +121,21 @@ export default function Experience() {
       </h2>
 
       <div className="projects-slider-wrapper">
-        <button className="slider-btn prev" onClick={prev} aria-label="Previous">
+        {/* Prev button — rendered outside the overflow-hidden track */}
+        <button
+          className="slider-btn prev"
+          onClick={prev}
+          aria-label="Previous"
+          type="button"
+        >
           <i className="bx bx-chevron-left" />
         </button>
 
-        <div className="projects-slider">
+        <div
+          className="projects-slider"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <div
             className="projects-track"
             style={{ transform: `translateX(${translateX})` }}
@@ -101,7 +154,9 @@ export default function Experience() {
 
                   <div className="project-tags">
                     {project.tags.map((tag) => (
-                      <span key={tag} className="project-tag">{tag}</span>
+                      <span key={tag} className="project-tag">
+                        {tag}
+                      </span>
                     ))}
                   </div>
 
@@ -120,18 +175,25 @@ export default function Experience() {
           </div>
         </div>
 
-        <button className="slider-btn next" onClick={next} aria-label="Next">
+        {/* Next button */}
+        <button
+          className="slider-btn next"
+          onClick={next}
+          aria-label="Next"
+          type="button"
+        >
           <i className="bx bx-chevron-right" />
         </button>
       </div>
 
       <div className="slider-dots">
-        {Array.from({ length: MAX_INDEX + 1 }).map((_, i) => (
+        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button
             key={i}
             className={`slider-dot${current === i ? " active" : ""}`}
             onClick={() => setCurrent(i)}
             aria-label={`Slide ${i + 1}`}
+            type="button"
           />
         ))}
       </div>
