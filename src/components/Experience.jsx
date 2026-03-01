@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
+/* ─────────────────────────────────────────
+   PROJECT DATA
+───────────────────────────────────────── */
 const projects = [
   {
     id: 1,
@@ -34,7 +37,7 @@ const projects = [
   {
     id: 4,
     image: "/images/NU_Admission.jpg",
-    title: "AI-Powered Admission System - NU Lipa",
+    title: "AI-Powered Admission System – NU Lipa",
     subtitle: "Admission System with Future ML Integration",
     description:
       "A Django-based student admission system for NU Lipa, allowing student registration, admin management, and future ML integration for processing applications.",
@@ -43,6 +46,8 @@ const projects = [
   },
 ];
 
+const GAP = 24; // px — matches CSS gap on .exp-track
+
 function getVisibleCount() {
   if (typeof window === "undefined") return 3;
   if (window.innerWidth <= 767) return 1;
@@ -50,78 +55,83 @@ function getVisibleCount() {
   return 3;
 }
 
+/* ─────────────────────────────────────────
+   COMPONENT
+───────────────────────────────────────── */
 export default function Experience() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [visibleCount, setVisibleCount] = useState(getVisibleCount);
+  const [offset, setOffset] = useState(0);
 
+  const sliderRef = useRef(null);
   const touchStartX = useRef(null);
   const maxIndex = projects.length - visibleCount;
 
-  // Update visibleCount on resize and clamp current index
+  /* ── Recompute pixel offset ───────────────────────────────
+     cardWidth = (sliderWidth - (visible-1) * GAP) / visible
+     step      = cardWidth + GAP
+     offset    = current * step
+  ───────────────────────────────────────────────────────── */
+  const recalc = useCallback(() => {
+    if (!sliderRef.current) return;
+    const sliderW = sliderRef.current.getBoundingClientRect().width;
+    if (!sliderW) return;
+    const cardW = (sliderW - (visibleCount - 1) * GAP) / visibleCount;
+    setOffset(current * (cardW + GAP));
+  }, [current, visibleCount]);
+
+  useEffect(() => { recalc(); }, [recalc]);
+
+  // ResizeObserver keeps offset accurate after any layout shift
   useEffect(() => {
-    const handleResize = () => {
+    const el = sliderRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => recalc());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [recalc]);
+
+  // Window resize → update visibleCount and clamp index
+  useEffect(() => {
+    const onResize = () => {
       const newCount = getVisibleCount();
       setVisibleCount(newCount);
       setCurrent((c) => Math.min(c, Math.max(0, projects.length - newCount)));
     };
-    window.addEventListener("resize", handleResize);
-    // Run once on mount to ensure correct initial value
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const next = useCallback(() => {
-    setCurrent((c) => (c >= maxIndex ? 0 : c + 1));
-  }, [maxIndex]);
+  /* ── Nav ─────────────────────────────────────────────────── */
+  const next = useCallback(() =>
+    setCurrent((c) => (c >= maxIndex ? 0 : c + 1)), [maxIndex]);
+  const prev = useCallback(() =>
+    setCurrent((c) => (c <= 0 ? maxIndex : c - 1)), [maxIndex]);
 
-  const prev = useCallback(() => {
-    setCurrent((c) => (c <= 0 ? maxIndex : c - 1));
-  }, [maxIndex]);
-
-  // Auto-slide
   useEffect(() => {
     if (paused) return;
-    const timer = setInterval(next, 3500);
-    return () => clearInterval(timer);
+    const t = setInterval(next, 3500);
+    return () => clearInterval(t);
   }, [paused, next]);
 
-  // Touch swipe handlers
-  const handleTouchStart = (e) => {
+  /* ── Touch ───────────────────────────────────────────────── */
+  const onTouchStart = (e) => {
     touchStartX.current = e.changedTouches[0].clientX;
     setPaused(true);
   };
-
-  const handleTouchEnd = (e) => {
+  const onTouchEnd = (e) => {
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
     setPaused(false);
   };
 
-  /*
-   * HOW THE TRANSLATION WORKS (pure CSS, no pixel math):
-   *
-   * Each card is:  flex: 0 0 calc((100% - (visibleCount-1)*24px) / visibleCount)
-   *
-   * One "step" = one card width + one gap (24px).
-   * Instead of computing pixels in JS, we express the step as a percentage of
-   * the TRACK width.  The track contains all `n` cards and (n-1) gaps.
-   *
-   * cardWidthPercent  = (100 - (visibleCount-1)*gapPct) / visibleCount
-   *   where gapPct is 24px expressed as a % of the track — but because the
-   *   track itself is dynamic we use a simpler approach:
-   *
-   *   stepPercent = 100 / visibleCount   (card%) + gap expressed in px via calc
-   *
-   * Final formula used:
-   *   translateX = calc( -${current} * (100% / ${visibleCount} + 24px / ${visibleCount}) )
-   *
-   * Which simplifies to:
-   *   translateX = calc( -${current} * ( (100% + 24px) / ${visibleCount} ) )
-   *
-   * This matches exactly how flex lays out the cards regardless of screen width.
-   */
-  const translateX = `calc(-${current} * ((100% + 24px) / ${visibleCount}))`;
+  // Each card gets an explicit flex-basis so CSS and JS agree
+  const cardStyle = {
+    flex: `0 0 calc((100% - ${(visibleCount - 1) * GAP}px) / ${visibleCount})`,
+    minWidth: 0,
+    boxSizing: "border-box",
+  };
 
   return (
     <section
@@ -134,47 +144,47 @@ export default function Experience() {
         My <span>Projects</span>
       </h2>
 
-      <div className="projects-slider-wrapper">
+      {/* ── [arrow] [slider] [arrow] ── */}
+      <div className="exp-wrapper">
         <button
-          className="slider-btn prev"
+          className="exp-arrow"
           onClick={prev}
-          aria-label="Previous project"
+          aria-label="Previous"
           type="button"
         >
           <i className="bx bx-chevron-left" />
         </button>
 
         <div
-          className="projects-slider"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
+          className="exp-slider"
+          ref={sliderRef}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           <div
-            className="projects-track"
-            style={{ transform: `translateX(${translateX})` }}
+            className="exp-track"
+            style={{ transform: `translateX(-${offset}px)` }}
           >
-            {projects.map((project) => (
-              <div key={project.id} className="project-card">
-                <div className="project-img-wrapper">
-                  <img src={project.image} alt={project.title} loading="lazy" />
-                  <div className="project-img-shine" />
+            {projects.map((p) => (
+              <div key={p.id} className="exp-card" style={cardStyle}>
+                <div className="exp-card__img">
+                  <img src={p.image} alt={p.title} loading="lazy" />
+                  <div className="exp-card__shine" />
                 </div>
-                <div className="project-body">
-                  <h3 className="project-title">{project.title}</h3>
-                  <p className="project-subtitle">{project.subtitle}</p>
-                  <p className="project-desc">{project.description}</p>
-                  <div className="project-tags">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="project-tag">
-                        {tag}
-                      </span>
+                <div className="exp-card__body">
+                  <h3 className="exp-card__title">{p.title}</h3>
+                  <p className="exp-card__subtitle">{p.subtitle}</p>
+                  <p className="exp-card__desc">{p.description}</p>
+                  <div className="exp-card__tags">
+                    {p.tags.map((tag) => (
+                      <span key={tag} className="exp-card__tag">{tag}</span>
                     ))}
                   </div>
                   <a
-                    href={project.link}
+                    href={p.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="project-btn"
+                    className="exp-card__btn"
                   >
                     <i className="bx bxl-github" />
                     View on GitHub
@@ -186,23 +196,23 @@ export default function Experience() {
         </div>
 
         <button
-          className="slider-btn next"
+          className="exp-arrow"
           onClick={next}
-          aria-label="Next project"
+          aria-label="Next"
           type="button"
         >
           <i className="bx bx-chevron-right" />
         </button>
       </div>
 
-      {/* Dots — one per "page" (each possible starting index) */}
-      <div className="slider-dots">
+      {/* ── Dots ── */}
+      <div className="exp-dots">
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button
             key={i}
-            className={`slider-dot${current === i ? " active" : ""}`}
+            className={`exp-dot${current === i ? " exp-dot--active" : ""}`}
             onClick={() => setCurrent(i)}
-            aria-label={`Go to slide ${i + 1}`}
+            aria-label={`Slide ${i + 1}`}
             type="button"
           />
         ))}
@@ -210,6 +220,197 @@ export default function Experience() {
     </section>
   );
 }
+
+
+// import React, { useState, useEffect, useCallback, useRef } from "react";
+
+// const projects = [
+//   {
+//     id: 1,
+//     image: "/images/ampalaya.jpg",
+//     title: "NPK Deficiency Detector",
+//     subtitle: "in Bitter Gourd Leaves",
+//     description:
+//       "A Deep Learning CNN Model focused on distinguishing between Healthy, Nitrogen, Phosphorus, and Potassium Deficient Bitter Gourd Plants.",
+//     tags: ["Deep Learning", "CNN", "IoT", "Python"],
+//     link: "https://github.com/itzjmbruhhh/NPK_Deficiency_Classifier_IoT",
+//   },
+//   {
+//     id: 2,
+//     image: "/images/leaf.jpg",
+//     title: "Leaf it Up to Me",
+//     subtitle: "Coffee Leaf Disease Detector",
+//     description:
+//       "A web application designed to detect coffee leaf diseases using a Convolutional Neural Network (CNN) based on MobileNetV2 architecture.",
+//     tags: ["MobileNetV2", "CNN", "Web App", "Python"],
+//     link: "https://github.com/itzjmbruhhh/coffee_leaf_diseases_classifier",
+//   },
+//   {
+//     id: 3,
+//     image: "/images/portfolio.jpg",
+//     title: "My Portfolio",
+//     subtitle: "Personal Portfolio Website",
+//     description:
+//       "Create like a pro, Turn your dreams into reality. A personal portfolio showcasing projects, skills, and experience.",
+//     tags: ["React", "CSS3", "HTML5", "JavaScript"],
+//     link: "https://github.com/patrickeva/ptrk_portfolio",
+//   },
+//   {
+//     id: 4,
+//     image: "/images/NU_Admission.jpg",
+//     title: "AI-Powered Admission System - NU Lipa",
+//     subtitle: "Admission System with Future ML Integration",
+//     description:
+//       "A Django-based student admission system for NU Lipa, allowing student registration, admin management, and future ML integration for processing applications.",
+//     tags: ["Django", "Python", "JavaScript", "TensorFlow"],
+//     link: "https://github.com/itzjmbruhhh/NU_Admission",
+//   },
+// ];
+
+// function getVisibleCount() {
+//   if (typeof window === "undefined") return 3;
+//   if (window.innerWidth <= 767) return 1;
+//   if (window.innerWidth <= 1099) return 2;
+//   return 3;
+// }
+
+// export default function Experience() {
+//   const [current, setCurrent] = useState(0);
+//   const [paused, setPaused] = useState(false);
+//   const [visibleCount, setVisibleCount] = useState(getVisibleCount);
+
+//   const touchStartX = useRef(null);
+//   const maxIndex = projects.length - visibleCount;
+
+//   // Update visibleCount on resize and clamp current index
+//   useEffect(() => {
+//     const handleResize = () => {
+//       const newCount = getVisibleCount();
+//       setVisibleCount(newCount);
+//       setCurrent((c) => Math.min(c, Math.max(0, projects.length - newCount)));
+//     };
+//     window.addEventListener("resize", handleResize);
+//     // Run once on mount to ensure correct initial value
+//     handleResize();
+//     return () => window.removeEventListener("resize", handleResize);
+//   }, []);
+
+//   const next = useCallback(() => {
+//     setCurrent((c) => (c >= maxIndex ? 0 : c + 1));
+//   }, [maxIndex]);
+
+//   const prev = useCallback(() => {
+//     setCurrent((c) => (c <= 0 ? maxIndex : c - 1));
+//   }, [maxIndex]);
+
+//   // Auto-slide
+//   useEffect(() => {
+//     if (paused) return;
+//     const timer = setInterval(next, 3500);
+//     return () => clearInterval(timer);
+//   }, [paused, next]);
+
+//   // Touch swipe handlers
+//   const handleTouchStart = (e) => {
+//     touchStartX.current = e.changedTouches[0].clientX;
+//     setPaused(true);
+//   };
+
+//   const handleTouchEnd = (e) => {
+//     const diff = touchStartX.current - e.changedTouches[0].clientX;
+//     if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
+//     setPaused(false);
+//   };
+
+//   const translateX = `calc(-${current} * ((100% + 24px) / ${visibleCount}))`;
+
+//   return (
+//     <section
+//       className="services"
+//       id="experience"
+//       onMouseEnter={() => setPaused(true)}
+//       onMouseLeave={() => setPaused(false)}
+//     >
+//       <h2 className="heading">
+//         My <span>Projects</span>
+//       </h2>
+
+//       <div className="projects-slider-wrapper">
+//         <button
+//           className="slider-btn prev"
+//           onClick={prev}
+//           aria-label="Previous project"
+//           type="button"
+//         >
+//           <i className="bx bx-chevron-left" />
+//         </button>
+
+//         <div
+//           className="projects-slider"
+//           onTouchStart={handleTouchStart}
+//           onTouchEnd={handleTouchEnd}
+//         >
+//           <div
+//             className="projects-track"
+//             style={{ transform: `translateX(${translateX})` }}
+//           >
+//             {projects.map((project) => (
+//               <div key={project.id} className="project-card">
+//                 <div className="project-img-wrapper">
+//                   <img src={project.image} alt={project.title} loading="lazy" />
+//                   <div className="project-img-shine" />
+//                 </div>
+//                 <div className="project-body">
+//                   <h3 className="project-title">{project.title}</h3>
+//                   <p className="project-subtitle">{project.subtitle}</p>
+//                   <p className="project-desc">{project.description}</p>
+//                   <div className="project-tags">
+//                     {project.tags.map((tag) => (
+//                       <span key={tag} className="project-tag">
+//                         {tag}
+//                       </span>
+//                     ))}
+//                   </div>
+//                   <a
+//                     href={project.link}
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                     className="project-btn"
+//                   >
+//                     <i className="bx bxl-github" />
+//                     View on GitHub
+//                   </a>
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+
+//         <button
+//           className="slider-btn next"
+//           onClick={next}
+//           aria-label="Next project"
+//           type="button"
+//         >
+//           <i className="bx bx-chevron-right" />
+//         </button>
+//       </div>
+
+//       {/* Dots — one per "page" (each possible starting index) */}
+//       <div className="slider-dots">
+//         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+//           <button
+//             key={i}
+//             className={`slider-dot${current === i ? " active" : ""}`}
+//             onClick={() => setCurrent(i)}
+//             aria-label={`Go to slide ${i + 1}`}
+//             type="button"
+//           />
+//         ))}
+//       </div>
+//     </section>
+//   );
+// }
 
 // import React, { useState, useEffect, useCallback, useRef } from "react";
 

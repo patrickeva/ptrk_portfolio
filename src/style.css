@@ -5426,3 +5426,391 @@ span { color: var(--main-color); }
     }
 }
 
+
+/* ============================================================
+   EXPERIENCE / PROJECTS SLIDER
+   All classes are prefixed with `exp-` to avoid conflicts.
+   Add this block anywhere in your main CSS file.
+============================================================ */
+
+/* ── Section wrapper ── */
+/* Uses your existing .services layout — no changes needed */
+
+/* ── Slider layout: [arrow][clip][arrow] ── */
+.exp-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* overflow:hidden clip — grows between the two arrows */
+.exp-slider {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* scrolling track */
+.exp-track {
+  display: flex;
+  gap: 24px;               /* must match GAP constant in JSX */
+  transition: transform 0.48s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  align-items: stretch;
+}
+
+/* ── Arrow buttons ── */
+.exp-arrow {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(28, 178, 223, 0.35);
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #1CB2DF;
+  font-size: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(28, 178, 223, 0.15);
+  transition: background 0.25s ease, box-shadow 0.25s ease,
+              transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              color 0.25s ease;
+  position: static;       /* never absolute */
+  transform: none;
+  z-index: 10;
+}
+
+.exp-arrow:hover {
+  background: #1CB2DF;
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(28, 178, 223, 0.45);
+  transform: scale(1.10);
+}
+
+.exp-arrow:active {
+  transform: scale(0.93);
+}
+
+/* ── Project card ── */
+/* flex-basis is set inline by React (JS measures slider width) */
+.exp-card {
+  /* do NOT set flex-basis here — JSX injects it inline */
+  border-radius: 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+
+  /* light-mode glass */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(28, 178, 223, 0.20);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.exp-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(28, 178, 223, 0.48);
+  box-shadow:
+    0 24px 60px rgba(28, 178, 223, 0.20),
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 0 0 1.5px rgba(28, 178, 223, 0.35);
+}
+
+/* ── Card image ── */
+.exp-card__img {
+  width: 100%;
+  height: 220px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.exp-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.exp-card:hover .exp-card__img img {
+  transform: scale(1.07);
+}
+
+/* shine sweep */
+.exp-card__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.65s ease;
+  pointer-events: none;
+}
+
+.exp-card:hover .exp-card__shine {
+  transform: translateX(100%);
+}
+
+/* ── Card body ── */
+.exp-card__body {
+  padding: 24px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+}
+
+.exp-card__title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+  line-height: 1.3;
+  transition: color 0.2s;
+}
+
+.exp-card:hover .exp-card__title { color: #0077cc; }
+
+.exp-card__subtitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0088cc;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+.exp-card__desc {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.75;
+  margin: 2px 0 4px;
+  flex: 1;
+}
+
+/* ── Tags ── */
+.exp-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.exp-card__tag {
+  background: rgba(0, 170, 255, 0.08);
+  border: 1.5px solid rgba(0, 170, 255, 0.28);
+  color: #0369a1;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 30px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.exp-card:hover .exp-card__tag {
+  background: rgba(0, 170, 255, 0.14);
+  border-color: rgba(0, 170, 255, 0.50);
+}
+
+/* ── GitHub button ── */
+.exp-card__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #1CB2DF 0%, #0077cc 100%);
+  color: #fff;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 16px rgba(28, 178, 223, 0.30);
+  transition: all 0.25s ease;
+}
+
+.exp-card__btn:hover {
+  background: linear-gradient(135deg, #0098c5 0%, #005fa3 100%);
+  color: #fff;
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(28, 178, 223, 0.45);
+}
+
+.exp-card__btn i { font-size: 1.2rem; }
+
+/* ── Dots ── */
+.exp-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.exp-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: rgba(28, 178, 223, 0.25);
+  transition: background 0.25s, transform 0.25s;
+}
+
+.exp-dot--active {
+  background: #1CB2DF;
+  transform: scale(1.5);
+}
+
+/* ============================================================
+   DARK MODE
+============================================================ */
+.dark-mode .exp-card {
+  background: rgba(12, 18, 52, 0.88);
+  border-color: rgba(28, 178, 223, 0.22);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.38),
+    0 1px 0 rgba(28, 178, 223, 0.08) inset;
+}
+
+.dark-mode .exp-card:hover {
+  border-color: rgba(28, 178, 223, 0.52);
+  box-shadow:
+    0 24px 60px rgba(28, 178, 223, 0.18),
+    0 8px 24px rgba(0, 0, 0, 0.30),
+    0 0 0 1.5px rgba(28, 178, 223, 0.38);
+}
+
+.dark-mode .exp-card__title    { color: #e2e8f0; }
+.dark-mode .exp-card__subtitle { color: #38bdf8; }
+.dark-mode .exp-card__desc     { color: #94a3b8; }
+.dark-mode .exp-card:hover .exp-card__title { color: #1CB2DF; }
+
+.dark-mode .exp-card__tag {
+  background: rgba(28, 178, 223, 0.12);
+  border-color: rgba(28, 178, 223, 0.28);
+  color: #7dd3fc;
+}
+
+.dark-mode .exp-card:hover .exp-card__tag {
+  background: rgba(28, 178, 223, 0.20);
+  border-color: rgba(28, 178, 223, 0.50);
+}
+
+.dark-mode .exp-arrow {
+  background: rgba(8, 14, 50, 0.88);
+  border-color: rgba(28, 178, 223, 0.35);
+  color: #1CB2DF;
+}
+
+.dark-mode .exp-arrow:hover {
+  background: rgba(28, 178, 223, 0.22);
+  color: #fff;
+}
+
+/* system dark mode fallback */
+@media (prefers-color-scheme: dark) {
+  .exp-card {
+    background: rgba(12, 18, 52, 0.88);
+    border-color: rgba(28, 178, 223, 0.22);
+  }
+  .exp-card__title    { color: #e2e8f0; }
+  .exp-card__subtitle { color: #38bdf8; }
+  .exp-card__desc     { color: #94a3b8; }
+  .exp-card__tag {
+    background: rgba(28, 178, 223, 0.12);
+    border-color: rgba(28, 178, 223, 0.28);
+    color: #7dd3fc;
+  }
+  .exp-arrow {
+    background: rgba(8, 14, 50, 0.88);
+    border-color: rgba(28, 178, 223, 0.35);
+    color: #1CB2DF;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET (2 cards)
+============================================================ */
+@media (max-width: 1099px) {
+  /* card flex-basis set inline by JS — nothing needed here */
+
+  .exp-card__img { height: 200px; }
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE (1 card)
+============================================================ */
+@media (max-width: 767px) {
+  .exp-wrapper {
+    gap: 8px;
+  }
+
+  .exp-arrow {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: 1.6rem;
+  }
+
+  /* card flex-basis is 100% set inline by JS */
+
+  .exp-card { border-radius: 18px; }
+
+  .exp-card__img { height: 185px; }
+
+  .exp-card__body {
+    padding: 18px 18px 16px;
+    gap: 7px;
+  }
+
+  .exp-card__title    { font-size: 1.05rem; }
+  .exp-card__subtitle { font-size: 0.67rem; }
+  .exp-card__desc     { font-size: 0.87rem; line-height: 1.65; }
+  .exp-card__tag      { font-size: 0.64rem; padding: 3px 10px; }
+  .exp-card__btn      { font-size: 0.87rem; padding: 11px 14px; margin-top: 11px; }
+
+  .exp-dots { margin-top: 24px; gap: 8px; }
+  .exp-dot  { width: 8px; height: 8px; }
+}
+
+@media (max-width: 400px) {
+  .exp-arrow {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    font-size: 1.4rem;
+  }
+
+  .exp-card__img { height: 160px; }
+
+  .exp-card__body { padding: 14px 14px 12px; }
+}
