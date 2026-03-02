@@ -5427,16 +5427,6 @@ span { color: var(--main-color); }
 }
 
 
-/* ============================================================
-   EXPERIENCE / PROJECTS SLIDER
-   All classes are prefixed with `exp-` to avoid conflicts.
-   Add this block anywhere in your main CSS file.
-============================================================ */
-
-/* ── Section wrapper ── */
-/* Uses your existing .services layout — no changes needed */
-
-/* ── Slider layout: [arrow][clip][arrow] ── */
 .exp-wrapper {
   display: flex;
   flex-direction: row;

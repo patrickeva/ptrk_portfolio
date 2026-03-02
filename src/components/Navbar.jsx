@@ -25,12 +25,25 @@ export default function Navbar({ activeSection, navigateTo }) {
 
   return (
     <header className={`header sticky`}>
+
       <a
         href="#"
         className="logo"
         onClick={(e) => handleNav(e, 'home')}
       >
-        PE
+        <img
+          src="/images/pp.jpg"
+          alt="Patrick Eva"
+          style={{
+            width: '45px',
+            height: '45px',
+            borderRadius: '50%',
+            objectFit: 'cover',
+            objectPosition: 'center top',
+            border: '2px solid var(--main-color, #00abf0)',
+            display: 'block',
+          }}
+        />
       </a>
 
       <nav className={`navbar ${menuOpen ? 'active' : ''}`}>
