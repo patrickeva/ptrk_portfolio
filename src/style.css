@@ -5805,3 +5805,128 @@ span { color: var(--main-color); }
   .exp-card__body { padding: 14px 14px 12px; }
 }
 
+.header,
+.header.sticky,
+.dark-mode .header,
+.dark-mode .header.sticky {
+    border: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Light mode — transparent, blend sa bg */
+.header,
+.header.sticky {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Dark mode — same behavior: transparent, walang line */
+.dark-mode .header,
+.dark-mode .header.sticky {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* ── Card ── */
+.dark-mode .skill-card {
+    background: rgba(14, 17, 40, 0.92) !important;
+    border: 1.5px solid rgba(28, 178, 223, 0.18) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark-mode .skill-card:hover {
+    background: rgba(18, 22, 52, 0.98) !important;
+    border-color: rgba(28, 178, 223, 0.38) !important;
+    box-shadow: 0 16px 40px rgba(28, 178, 223, 0.12) !important;
+    transform: translateY(-6px) scale(1.02) !important;
+}
+
+/* ── Icon bubble — tanggalin ang white bg ── */
+.dark-mode .skill-icon-wrap {
+    background: rgba(18, 22, 52, 0.95) !important;
+    border: 1.5px solid rgba(28, 178, 223, 0.22) !important;
+    box-shadow: none !important;
+}
+
+/* Kapag may color-mix na white sa icon wrap, override din */
+.dark-mode .skill-card:hover .skill-icon-wrap {
+    background: rgba(25, 30, 65, 0.98) !important;
+    border-color: rgba(28, 178, 223, 0.45) !important;
+}
+
+/* ── Icon color — keep accent color ── */
+.dark-mode .skill-icon,
+.dark-mode .skill-icon-wrap i {
+    filter: brightness(1.1) !important;
+}
+
+/* ── Text ── */
+.dark-mode .skill-name {
+    color: #dde3f0 !important;
+}
+
+.dark-mode .skill-percent {
+    color: #1CB2DF !important;
+}
+
+/* ── Progress track background ── */
+.dark-mode .skill-track {
+    background: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* ── Progress fill — keep gradient ── */
+.dark-mode .skill-fill {
+    background: linear-gradient(90deg, #1CB2DF, #7c3aed) !important;
+    box-shadow: 0 0 10px rgba(28, 178, 223, 0.4) !important;
+}
+
+/* ── Dot marker ── */
+.dark-mode .skill-dot {
+    background: #fff !important;
+    border-color: #1CB2DF !important;
+    box-shadow: 0 0 8px rgba(28, 178, 223, 0.6) !important;
+}
+
+/* ── Section background override (kung may light bg ang section) ── */
+.dark-mode .skills {
+    background: transparent !important;
+}
+
+/* ── prefers-color-scheme fallback ── */
+@media (prefers-color-scheme: dark) {
+    .skill-card {
+        background: rgba(14, 17, 40, 0.92) !important;
+        border: 1.5px solid rgba(28, 178, 223, 0.18) !important;
+    }
+
+    .skill-icon-wrap {
+        background: rgba(18, 22, 52, 0.95) !important;
+        border: 1.5px solid rgba(28, 178, 223, 0.22) !important;
+    }
+
+    .skill-name    { color: #dde3f0 !important; }
+    .skill-percent { color: #1CB2DF !important; }
+
+    .skill-track {
+        background: rgba(255, 255, 255, 0.07) !important;
+    }
+
+    .skill-fill {
+        background: linear-gradient(90deg, #1CB2DF, #7c3aed) !important;
+    }
+
+    .skill-dot {
+        background: #fff !important;
+        border-color: #1CB2DF !important;
+    }
+}
+
+
+
+

@@ -7,7 +7,7 @@ const socialLinks = [
     label: "GitHub",
     icon: "bxl-github",
     url: "https://github.com/patrickeva",
-    color: "#24292e",
+    color: "#060606",
   },
   {
     id: "linkedin",
