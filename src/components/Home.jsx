@@ -51,7 +51,7 @@ export default function Home() {
 
         <div className="home-buttons">
           <a
-            href="/cv/My_CV.pdf"
+            href="/cv/Patrick_CV.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="btn"
