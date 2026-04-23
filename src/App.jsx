@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { motion } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import Skills from './components/Skills'
@@ -131,8 +132,15 @@ function App() {
           ref={contentRef}
           className={`section-view${transitioning ? ' section-view--hidden' : ' section-view--visible'}`}
         >
-          <CurrentSection />
-          <Footer />
+          <motion.div
+            key={displaySection}
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
+          >
+            <CurrentSection />
+            <Footer />
+          </motion.div>
         </main>
       </div>
     </div>

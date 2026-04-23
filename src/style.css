@@ -5928,5 +5928,168 @@ span { color: var(--main-color); }
 }
 
 
+/* ══════════════════════════════════════════════════════
+   TYPOGRAPHY ENHANCEMENTS
+   Using Space Grotesk for section headings for a
+   more senior / editorial developer aesthetic.
+══════════════════════════════════════════════════════ */
+.heading {
+  font-family: 'Space Grotesk', 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.heading span {
+  background: linear-gradient(135deg, #1CB2DF 20%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  /* Safari fallback */
+  color: #1CB2DF;
+}
+
+/* ══════════════════════════════════════════════════════
+   TECH STACK INFINITE MARQUEE
+══════════════════════════════════════════════════════ */
+.tech-stack-section {
+  padding: 5rem 0 1rem;
+  overflow: hidden;
+}
+
+.tech-stack-eyebrow {
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--main-color);
+  margin-bottom: 3rem;
+  font-family: 'Space Grotesk', 'Poppins', sans-serif;
+  opacity: 0.7;
+}
+
+/* ── Wrapper holds both the fade overlays and the viewport ── */
+.tech-marquee-wrapper {
+  position: relative;
+}
+
+/* ── The clipping container ── */
+.tech-marquee-viewport {
+  overflow: hidden;
+  width: 100%;
+  cursor: default;
+  padding: 1.2rem 0;
+}
+
+/* ── The scroll track — width driven by JS ── */
+.tech-marquee-track {
+  display: flex;
+  gap: 1.6rem;
+  width: max-content;
+  will-change: transform;
+}
+
+/* ── Glassmorphism tech card ── */
+.tech-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 2.6rem;
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--card-border);
+  border-radius: 2rem;
+  min-width: 12rem;
+  cursor: default;
+  user-select: none;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.tech-card:hover {
+  border-color: rgba(28, 178, 223, 0.5);
+  box-shadow:
+    0 8px 40px rgba(28, 178, 223, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.tech-card__icon {
+  line-height: 1;
+  filter: drop-shadow(0 0 6px currentColor);
+  opacity: 0.82;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.tech-card:hover .tech-card__icon {
+  opacity: 1;
+  filter: drop-shadow(0 0 14px currentColor);
+}
+
+.tech-card__name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  font-family: 'Space Grotesk', 'Poppins', sans-serif;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* ── Gradient fade edges ── */
+.tech-marquee-fade {
+  position: absolute;
+  top: 0;
+  width: 14rem;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.tech-marquee-fade--left {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-color) 0%, transparent 100%);
+}
+
+.tech-marquee-fade--right {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-color) 0%, transparent 100%);
+}
+
+/* ── Dark mode overrides for richer neon glow ── */
+.dark-mode .tech-card {
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.dark-mode .tech-card:hover {
+  border-color: rgba(28, 178, 223, 0.55);
+  box-shadow:
+    0 8px 48px rgba(28, 178, 223, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+/* ── Mobile: slightly smaller cards ── */
+@media (max-width: 768px) {
+  .tech-card {
+    padding: 1.6rem 2rem;
+    min-width: 10rem;
+    border-radius: 1.6rem;
+  }
+
+  .tech-card__name {
+    font-size: 1.1rem;
+  }
+
+  .tech-marquee-fade {
+    width: 6rem;
+  }
+}
+
+
 
 

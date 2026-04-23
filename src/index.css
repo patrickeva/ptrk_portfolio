@@ -26,3 +26,6 @@ body {
     background: var(--bg-color);
     color: var(--text-color);
 }
+
+/* Tailwind utilities — preflight is disabled so this won't reset existing styles */
+@tailwind utilities;

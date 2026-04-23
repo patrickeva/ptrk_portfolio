@@ -33,7 +33,7 @@ export default function Home() {
             <span className="home-details-icon">
               <i className="bx bx-code-alt"></i>
             </span>
-            <span>Web Developer</span>
+            <span>Web Developer || Software Engineer</span>
           </li>
           <li>
             <span className="home-details-icon">

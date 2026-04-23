@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
 
 /* ─────────────────────────────────────────
    PROJECT DATA
@@ -165,8 +166,19 @@ export default function Experience() {
             className="exp-track"
             style={{ transform: `translateX(-${offset}px)` }}
           >
-            {projects.map((p) => (
-              <div key={p.id} className="exp-card" style={cardStyle}>
+            {projects.map((p, i) => (
+              <motion.div
+                key={p.id}
+                className="exp-card"
+                style={cardStyle}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.52,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: 0.1 + i * 0.1,
+                }}
+              >
                 <div className="exp-card__img">
                   <img src={p.image} alt={p.title} loading="lazy" />
                   <div className="exp-card__shine" />
@@ -190,7 +202,7 @@ export default function Experience() {
                     View on GitHub
                   </a>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

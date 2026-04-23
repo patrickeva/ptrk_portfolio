@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import TechStack from "./TechStack";
 
 const skillData = [
   { name: "HTML & CSS",           level: 70, icon: "bxl-html5",    color: "#e34f26" },
@@ -74,6 +75,8 @@ export default function Skills() {
           <SkillCard key={skill.name} skill={skill} index={i} />
         ))}
       </div>
+
+      <TechStack />
     </section>
   );
 }
