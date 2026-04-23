@@ -5,6 +5,17 @@ import { motion } from "framer-motion";
    PROJECT DATA
 ───────────────────────────────────────── */
 const projects = [
+
+  {
+    id: 1,
+    image: "/images/sb-picture.png",
+    title: "Cuenca Legislative Tracking System",
+    subtitle: "Sangguniang Bayan Legislative Tracker",
+    description:
+      "A centralized digital platform for tracking ordinances and resolutions, featuring secure cloud storage and automated status monitoring to enhance municipal transparency.",
+    tags: ["React", "Firebase", "Supabase", "JavaScript"],
+    link: "https://github.com/patrickeva/sb-cuenca-docsys",
+  },
   {
     id: 1,
     image: "/images/ampalaya.jpg",
