@@ -9,6 +9,18 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import './App.css'
 
+/* ── Floating particle nodes rendered in the fixed background ── */
+const PARTICLE_COUNT = 12
+function Particles() {
+  return (
+    <div className="particles-wrap" aria-hidden="true">
+      {Array.from({ length: PARTICLE_COUNT }).map((_, i) => (
+        <div key={i} className="particle" />
+      ))}
+    </div>
+  )
+}
+
 const SECTIONS = [
   { id: 'home',      label: 'Home',       Component: Home },
   { id: 'skills',    label: 'Skills',     Component: Skills },
@@ -24,8 +36,27 @@ function App() {
   const [curtainDir, setCurtainDir]         = useState('down')
   const [labelText, setLabelText]           = useState('')
   const [showLabel, setShowLabel]           = useState(false)
-  const contentRef = useRef(null)
-  const timerRef   = useRef([])
+  const contentRef   = useRef(null)
+  const timerRef     = useRef([])
+  const mouseGlowRef = useRef(null)
+
+  /* ── Cursor glow — only on pointer devices ── */
+  useEffect(() => {
+    const el = mouseGlowRef.current
+    if (!el) return
+    const onMove = (e) => {
+      el.style.left = e.clientX + 'px'
+      el.style.top  = e.clientY + 'px'
+      el.classList.add('mouse-glow--visible')
+    }
+    const onLeave = () => el.classList.remove('mouse-glow--visible')
+    window.addEventListener('mousemove', onMove)
+    document.documentElement.addEventListener('mouseleave', onLeave)
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      document.documentElement.removeEventListener('mouseleave', onLeave)
+    }
+  }, [])
 
   // Clear all pending timers on unmount
   useEffect(() => {
@@ -110,6 +141,12 @@ function App() {
 
   return (
     <div className="app-wrapper">
+      {/* Cursor glow */}
+      <div ref={mouseGlowRef} className="mouse-glow" aria-hidden="true" />
+
+      {/* Floating ambient particles */}
+      <Particles />
+
       {/* Dot grid background */}
       <div className="animated-bg" aria-hidden="true" />
 

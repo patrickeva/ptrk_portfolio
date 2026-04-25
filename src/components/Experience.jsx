@@ -8,7 +8,18 @@ const projects = [
 
   {
     id: 1,
-    image: "/images/sb-picture.png",
+    image: "/images/franchiseBG.png",
+    title: "Tricycle Franchise Tracker",
+    subtitle: "Real-Time Monitoring of Driver Franchises and Licenses",
+    description:
+      "The Tricycle Franchise Tracker is a web-based system for managing the issuance, renewal, and monitoring of tricycle franchises.",
+    tags: ["React 18", "Firebase", "Supabase", "JavaScript", "Tailwind CSS 3", "Plus Jakarta Sans", "JetBrains Mono"],
+    link: "https://github.com/patrickeva/Tric-Franchise-Tracker",
+  },
+
+  {
+    id: 1,
+    image: "/images/sbBackground.png",
     title: "Cuenca Legislative Tracking System",
     subtitle: "Sangguniang Bayan Legislative Tracker",
     description:
@@ -152,9 +163,14 @@ export default function Experience() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <h2 className="heading">
+      <motion.h2
+        className="heading"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
         My <span>Projects</span>
-      </h2>
+      </motion.h2>
 
       {/* ── [arrow] [slider] [arrow] ── */}
       <div className="exp-wrapper">
@@ -185,10 +201,11 @@ export default function Experience() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  duration: 0.52,
+                  duration: 0.55,
                   ease: [0.22, 1, 0.36, 1],
-                  delay: 0.1 + i * 0.1,
+                  delay: 0.08 + i * 0.09,
                 }}
+                whileHover={{ y: -6, scale: 1.01 }}
               >
                 <div className="exp-card__img">
                   <img src={p.image} alt={p.title} loading="lazy" />
