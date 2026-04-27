@@ -49,7 +49,7 @@ const projects = [
   },
   {
     id: 3,
-    image: "/images/portfolio.jpg",
+    image: "/images/myPortfolio.png",
     title: "My Portfolio",
     subtitle: "Personal Portfolio Website",
     description:
