@@ -121,7 +121,7 @@ function App() {
       sr.reveal('.about-me-content', { origin: 'right' })
     }
     sr.reveal('.heading', { origin: 'top' })
-    sr.reveal('.skill-card, .about-me-highlight, .project-card, .edu-card, .services-box', {
+    sr.reveal('.skill-card, .project-card, .edu-card, .services-box', {
       origin: 'bottom',
       interval: 80,
     })

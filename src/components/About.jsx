@@ -110,17 +110,6 @@ export default function About() {
             <div className="about-me-ring about-me-ring--3" aria-hidden="true" />
           </div>
 
-          {/* Available-for-work pill */}
-          <motion.div
-            className="about-me-badge"
-            initial={{ opacity: 0, scale: 0.65, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.55, type: "spring", stiffness: 300, damping: 20 }}
-          >
-            <span className="about-me-badge-dot" />
-            Available for work
-          </motion.div>
-
           {/* Mini stats row */}
           <motion.div
             className="about-me-stats"

@@ -39,17 +39,6 @@ export default function Home() {
       {/* ── LEFT: text content ── */}
       <motion.div className="home-content" {...fadeLeft(0.08)}>
 
-        {/* Available badge */}
-        <motion.div
-          className="home-available-badge"
-          initial={{ opacity: 0, scale: 0.7, y: -10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1, type: "spring", stiffness: 280, damping: 20 }}
-        >
-          <span className="home-available-dot" />
-          Available for opportunities
-        </motion.div>
-
         {/* Name */}
         <motion.h1 {...fadeUp(0.18)}>PATRICK EVA</motion.h1>
 
