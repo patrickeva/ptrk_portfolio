@@ -17,8 +17,9 @@ export default function Navbar({ activeSection, navigateTo }) {
 
   const links = [
     { id: 'home',      label: 'Home' },
+    { id: 'about',     label: 'About' },
     { id: 'skills',    label: 'Skills' },
-    { id: 'services',  label: 'Project' },
+    { id: 'services',  label: 'Projects' },
     { id: 'education', label: 'Education' },
     { id: 'contact',   label: 'Socials' },
   ];

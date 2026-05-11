@@ -15,6 +15,7 @@ const projects = [
       "The Tricycle Franchise Tracker is a web-based system for managing the issuance, renewal, and monitoring of tricycle franchises.",
     tags: ["React 18", "Firebase", "Supabase", "JavaScript", "Tailwind CSS 3", "Plus Jakarta Sans", "JetBrains Mono"],
     link: "https://github.com/patrickeva/Tric-Franchise-Tracker",
+    liveLink: "https://tric-franchise-tracker.vercel.app/",
   },
 
   {
@@ -26,6 +27,7 @@ const projects = [
       "A centralized digital platform for tracking ordinances and resolutions, featuring secure cloud storage and automated status monitoring to enhance municipal transparency.",
     tags: ["React", "Firebase", "Supabase", "JavaScript"],
     link: "https://github.com/patrickeva/sb-cuenca-docsys",
+    liveLink: "https://sb-cuenca-docsys.vercel.app",
   },
   {
     id: 1,
@@ -36,6 +38,7 @@ const projects = [
       "A Deep Learning CNN Model focused on distinguishing between Healthy, Nitrogen, Phosphorus, and Potassium Deficient Bitter Gourd Plants.",
     tags: ["Deep Learning", "CNN", "IoT", "Python"],
     link: "https://github.com/itzjmbruhhh/NPK_Deficiency_Classifier_IoT",
+    liveLink: "https://npknows.vercel.app/",
   },
   {
     id: 2,
@@ -220,15 +223,28 @@ export default function Experience() {
                       <span key={tag} className="exp-card__tag">{tag}</span>
                     ))}
                   </div>
-                  <a
-                    href={p.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="exp-card__btn"
-                  >
-                    <i className="bx bxl-github" />
-                    View on GitHub
-                  </a>
+                  <div className="exp-card__actions">
+                    <a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="exp-card__btn exp-card__btn--github"
+                    >
+                      <i className="bx bxl-github" />
+                      GitHub
+                    </a>
+                    {p.liveLink && (
+                      <a
+                        href={p.liveLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="exp-card__btn exp-card__btn--live"
+                      >
+                        <i className="bx bx-link-external" />
+                        Live Demo
+                      </a>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}

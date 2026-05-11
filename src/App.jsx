@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
+import About from './components/About'
 import Skills from './components/Skills'
 import Experience from './components/Experience'
 import Projects from './components/Education'
@@ -23,8 +24,9 @@ function Particles() {
 
 const SECTIONS = [
   { id: 'home',      label: 'Home',       Component: Home },
+  { id: 'about',     label: 'About',      Component: About },
   { id: 'skills',    label: 'Skills',     Component: Skills },
-  { id: 'services',  label: 'Experience', Component: Experience },
+  { id: 'services',  label: 'Projects',   Component: Experience },
   { id: 'education', label: 'Education',  Component: Projects },
   { id: 'contact',   label: 'Contact',    Component: Contact },
 ]
@@ -114,8 +116,12 @@ function App() {
       sr.reveal('.home-content h1', { origin: 'left' })
       sr.reveal('.home-content h3, .home-content p', { origin: 'right' })
     }
+    if (displaySection === 'about') {
+      sr.reveal('.about-me-visual', { origin: 'left' })
+      sr.reveal('.about-me-content', { origin: 'right' })
+    }
     sr.reveal('.heading', { origin: 'top' })
-    sr.reveal('.skills-box, .project-card, .edu-card, .services-box', {
+    sr.reveal('.skill-card, .about-me-highlight, .project-card, .edu-card, .services-box', {
       origin: 'bottom',
       interval: 80,
     })
