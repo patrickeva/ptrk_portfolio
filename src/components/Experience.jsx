@@ -1,28 +1,21 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-/* ─────────────────────────────────────────
-   PROJECT DATA
-───────────────────────────────────────── */
 const projects = [
-
   {
-    id: 1,
     image: "/images/franchiseBG.png",
     title: "Tricycle Franchise Tracker",
-    subtitle: "Real-Time Monitoring of Driver Franchises and Licenses",
+    subtitle: "Real-Time Monitoring · Driver Franchises & Licenses",
     description:
-      "The Tricycle Franchise Tracker is a web-based system for managing the issuance, renewal, and monitoring of tricycle franchises.",
-    tags: ["React 18", "Firebase", "Supabase", "JavaScript", "Tailwind CSS 3", "Plus Jakarta Sans", "JetBrains Mono"],
+      "A web-based system for managing the issuance, renewal, and monitoring of tricycle franchises with real-time Firebase sync and admin dashboards.",
+    tags: ["React 18", "Firebase", "Supabase", "Tailwind CSS"],
     link: "https://github.com/patrickeva/Tric-Franchise-Tracker",
     liveLink: "https://tric-franchise-tracker.vercel.app/",
   },
-
   {
-    id: 1,
     image: "/images/sbBackground.png",
-    title: "Cuenca Legislative Tracking System",
-    subtitle: "Sangguniang Bayan Legislative Tracker",
+    title: "Cuenca Legislative Tracker",
+    subtitle: "Sangguniang Bayan · Legislative Document System",
     description:
       "A centralized digital platform for tracking ordinances and resolutions, featuring secure cloud storage and automated status monitoring to enhance municipal transparency.",
     tags: ["React", "Firebase", "Supabase", "JavaScript"],
@@ -30,138 +23,78 @@ const projects = [
     liveLink: "https://sb-cuenca-docsys.vercel.app",
   },
   {
-    id: 1,
     image: "/images/ampalaya.jpg",
     title: "NPK Deficiency Detector",
-    subtitle: "in Bitter Gourd Leaves",
+    subtitle: "Deep Learning · Bitter Gourd Leaf Analysis",
     description:
-      "A Deep Learning CNN Model focused on distinguishing between Healthy, Nitrogen, Phosphorus, and Potassium Deficient Bitter Gourd Plants.",
+      "A CNN model that distinguishes Healthy, Nitrogen, Phosphorus, and Potassium deficiencies in bitter gourd plants, paired with IoT hardware for field deployment.",
     tags: ["Deep Learning", "CNN", "IoT", "Python"],
     link: "https://github.com/itzjmbruhhh/NPK_Deficiency_Classifier_IoT",
     liveLink: "https://npknows.vercel.app/",
   },
   {
-    id: 2,
     image: "/images/leaf.jpg",
     title: "Leaf it Up to Me",
-    subtitle: "Coffee Leaf Disease Detector",
+    subtitle: "Machine Learning · Coffee Leaf Disease Detection",
     description:
-      "A web application designed to detect coffee leaf diseases using a Convolutional Neural Network (CNN) based on MobileNetV2 architecture.",
-    tags: ["MobileNetV2", "CNN", "Web App", "Python"],
+      "A web application using MobileNetV2 CNN architecture to detect diseases in coffee leaves from uploaded photos with high classification accuracy.",
+    tags: ["MobileNetV2", "CNN", "Python", "Web App"],
     link: "https://github.com/itzjmbruhhh/coffee_leaf_diseases_classifier",
   },
   {
-    id: 3,
     image: "/images/myPortfolio.png",
-    title: "My Portfolio",
-    subtitle: "Personal Portfolio Website",
+    title: "Personal Portfolio",
+    subtitle: "Frontend · React Portfolio Website",
     description:
-      "Create like a pro, Turn your dreams into reality. A personal portfolio showcasing projects, skills, and experience.",
-    tags: ["React", "CSS3", "HTML5", "JavaScript"],
+      "This portfolio — crafted with React, Framer Motion, and custom CSS. Scroll-triggered animations, dark mode, and a fully responsive layout.",
+    tags: ["React", "Framer Motion", "CSS3", "Vite"],
     link: "https://github.com/patrickeva/ptrk_portfolio",
   },
   {
-    id: 4,
     image: "/images/NU_Admission.jpg",
-    title: "AI-Powered Admission System – NU Lipa",
-    subtitle: "Admission System with Future ML Integration",
+    title: "AI-Powered Admission System",
+    subtitle: "NU Lipa · Student Admission with ML Integration",
     description:
-      "A Django-based student admission system for NU Lipa, allowing student registration, admin management, and future ML integration for processing applications.",
-    tags: ["Django", "Python", "JavaScript", "TensorFlow"],
+      "A Django-based admission platform for NU Lipa supporting student registration, admin management, and future TensorFlow ML integration for application processing.",
+    tags: ["Django", "Python", "TensorFlow", "JavaScript"],
     link: "https://github.com/itzjmbruhhh/NU_Admission",
   },
 ];
 
-const GAP = 24; // px — matches CSS gap on .exp-track
+const slideVariants = {
+  enter: (dir) => ({ opacity: 0, x: dir === "next" ? 60 : -60 }),
+  center: { opacity: 1, x: 0 },
+  exit:  (dir) => ({ opacity: 0, x: dir === "next" ? -60 : 60 }),
+};
 
-function getVisibleCount() {
-  if (typeof window === "undefined") return 3;
-  if (window.innerWidth <= 767) return 1;
-  if (window.innerWidth <= 1099) return 2;
-  return 3;
-}
-
-/* ─────────────────────────────────────────
-   COMPONENT
-───────────────────────────────────────── */
 export default function Experience() {
-  const [current, setCurrent] = useState(0);
+  const [index, setIndex]   = useState(0);
+  const [dir, setDir]       = useState("next");
   const [paused, setPaused] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(getVisibleCount);
-  const [offset, setOffset] = useState(0);
 
-  const sliderRef = useRef(null);
-  const touchStartX = useRef(null);
-  const maxIndex = projects.length - visibleCount;
-
-  /* ── Recompute pixel offset ───────────────────────────────
-     cardWidth = (sliderWidth - (visible-1) * GAP) / visible
-     step      = cardWidth + GAP
-     offset    = current * step
-  ───────────────────────────────────────────────────────── */
-  const recalc = useCallback(() => {
-    if (!sliderRef.current) return;
-    const sliderW = sliderRef.current.getBoundingClientRect().width;
-    if (!sliderW) return;
-    const cardW = (sliderW - (visibleCount - 1) * GAP) / visibleCount;
-    setOffset(current * (cardW + GAP));
-  }, [current, visibleCount]);
-
-  useEffect(() => { recalc(); }, [recalc]);
-
-  // ResizeObserver keeps offset accurate after any layout shift
-  useEffect(() => {
-    const el = sliderRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => recalc());
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [recalc]);
-
-  // Window resize → update visibleCount and clamp index
-  useEffect(() => {
-    const onResize = () => {
-      const newCount = getVisibleCount();
-      setVisibleCount(newCount);
-      setCurrent((c) => Math.min(c, Math.max(0, projects.length - newCount)));
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+  const go = useCallback((newDir, newIdx) => {
+    setDir(newDir);
+    setIndex(newIdx);
   }, []);
 
-  /* ── Nav ─────────────────────────────────────────────────── */
   const next = useCallback(() =>
-    setCurrent((c) => (c >= maxIndex ? 0 : c + 1)), [maxIndex]);
+    go("next", (index + 1) % projects.length), [go, index]);
   const prev = useCallback(() =>
-    setCurrent((c) => (c <= 0 ? maxIndex : c - 1)), [maxIndex]);
+    go("prev", (index - 1 + projects.length) % projects.length), [go, index]);
 
   useEffect(() => {
     if (paused) return;
-    const t = setInterval(next, 3500);
+    const t = setInterval(next, 4500);
     return () => clearInterval(t);
   }, [paused, next]);
 
-  /* ── Touch ───────────────────────────────────────────────── */
-  const onTouchStart = (e) => {
-    touchStartX.current = e.changedTouches[0].clientX;
-    setPaused(true);
-  };
-  const onTouchEnd = (e) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
-    setPaused(false);
-  };
-
-  // Each card gets an explicit flex-basis so CSS and JS agree
-  const cardStyle = {
-    flex: `0 0 calc((100% - ${(visibleCount - 1) * GAP}px) / ${visibleCount})`,
-    minWidth: 0,
-    boxSizing: "border-box",
-  };
+  const p   = projects[index];
+  const num = String(index + 1).padStart(2, "0");
+  const tot = String(projects.length).padStart(2, "0");
 
   return (
     <section
-      className="services"
+      className="projects-section"
       id="services"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -176,104 +109,88 @@ export default function Experience() {
         My <span>Projects</span>
       </motion.h2>
 
-      {/* ── [arrow] [slider] [arrow] ── */}
-      <div className="exp-wrapper">
-        <button
-          className="exp-arrow"
-          onClick={prev}
-          aria-label="Previous"
-          type="button"
-        >
+      <div className="proj-stage">
+        <AnimatePresence mode="wait" custom={dir}>
+          <motion.div
+            key={index}
+            className="proj-card"
+            custom={dir}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {/* ── Left: image ── */}
+            <div className="proj-card__visual">
+              <img src={p.image} alt={p.title} loading="lazy" />
+              <div className="proj-card__img-overlay" />
+              <span className="proj-card__big-num">{num}</span>
+            </div>
+
+            {/* ── Right: content ── */}
+            <div className="proj-card__body">
+              <span className="proj-card__counter">{num} / {tot}</span>
+
+              <h3 className="proj-card__title">{p.title}</h3>
+              <p className="proj-card__subtitle">{p.subtitle}</p>
+              <p className="proj-card__desc">{p.description}</p>
+
+              <div className="proj-card__tags">
+                {p.tags.map(tag => (
+                  <span key={tag} className="proj-card__tag">{tag}</span>
+                ))}
+              </div>
+
+              <div className="proj-card__actions">
+                <a
+                  href={p.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="proj-btn proj-btn--ghost"
+                >
+                  <i className="bx bxl-github" /> GitHub
+                </a>
+                {p.liveLink && (
+                  <a
+                    href={p.liveLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="proj-btn proj-btn--solid"
+                  >
+                    <i className="bx bx-link-external" /> Live Demo
+                  </a>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Side arrows */}
+        <button className="proj-arrow proj-arrow--prev" onClick={prev} aria-label="Previous">
           <i className="bx bx-chevron-left" />
         </button>
-
-        <div
-          className="exp-slider"
-          ref={sliderRef}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
-          <div
-            className="exp-track"
-            style={{ transform: `translateX(-${offset}px)` }}
-          >
-            {projects.map((p, i) => (
-              <motion.div
-                key={p.id}
-                className="exp-card"
-                style={cardStyle}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{
-                  duration: 0.55,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.05 + i * 0.07,
-                }}
-                whileHover={{ y: -6, scale: 1.01 }}
-              >
-                <div className="exp-card__img">
-                  <img src={p.image} alt={p.title} loading="lazy" />
-                  <div className="exp-card__shine" />
-                </div>
-                <div className="exp-card__body">
-                  <h3 className="exp-card__title">{p.title}</h3>
-                  <p className="exp-card__subtitle">{p.subtitle}</p>
-                  <p className="exp-card__desc">{p.description}</p>
-                  <div className="exp-card__tags">
-                    {p.tags.map((tag) => (
-                      <span key={tag} className="exp-card__tag">{tag}</span>
-                    ))}
-                  </div>
-                  <div className="exp-card__actions">
-                    <a
-                      href={p.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="exp-card__btn exp-card__btn--github"
-                    >
-                      <i className="bx bxl-github" />
-                      GitHub
-                    </a>
-                    {p.liveLink && (
-                      <a
-                        href={p.liveLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="exp-card__btn exp-card__btn--live"
-                      >
-                        <i className="bx bx-link-external" />
-                        Live Demo
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <button
-          className="exp-arrow"
-          onClick={next}
-          aria-label="Next"
-          type="button"
-        >
+        <button className="proj-arrow proj-arrow--next" onClick={next} aria-label="Next">
           <i className="bx bx-chevron-right" />
         </button>
       </div>
 
-      {/* ── Dots ── */}
-      <div className="exp-dots">
-        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-          <button
-            key={i}
-            className={`exp-dot${current === i ? " exp-dot--active" : ""}`}
-            onClick={() => setCurrent(i)}
-            aria-label={`Slide ${i + 1}`}
-            type="button"
+      {/* Progress bar + dots */}
+      <div className="proj-nav">
+        <button className="proj-nav__arrow" onClick={prev} aria-label="Previous">
+          <i className="bx bx-arrow-back" />
+        </button>
+
+        <div className="proj-progress">
+          <div
+            className="proj-progress__fill"
+            style={{ width: `${((index + 1) / projects.length) * 100}%` }}
           />
-        ))}
+        </div>
+
+        <button className="proj-nav__arrow" onClick={next} aria-label="Next">
+          <i className="bx bx-right-arrow-alt" />
+        </button>
       </div>
     </section>
   );
