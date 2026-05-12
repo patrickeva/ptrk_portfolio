@@ -2,10 +2,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1];
+const vp   = { once: true, margin: "-60px" };
 
-const fadeUp   = (delay = 0) => ({ initial: { opacity: 0, y: 32 },  animate: { opacity: 1, y: 0 },  transition: { duration: 0.65, ease, delay } });
-const fadeLeft = (delay = 0) => ({ initial: { opacity: 0, x: -44 }, animate: { opacity: 1, x: 0 },  transition: { duration: 0.7,  ease, delay } });
-const fadeRight= (delay = 0) => ({ initial: { opacity: 0, x: 44 },  animate: { opacity: 1, x: 0 },  transition: { duration: 0.7,  ease, delay } });
+const fadeUp   = (delay = 0) => ({ initial: { opacity: 0, y: 32 },  whileInView: { opacity: 1, y: 0 },  viewport: vp, transition: { duration: 0.65, ease, delay } });
+const fadeLeft = (delay = 0) => ({ initial: { opacity: 0, x: -44 }, whileInView: { opacity: 1, x: 0 },  viewport: vp, transition: { duration: 0.7,  ease, delay } });
+const fadeRight= (delay = 0) => ({ initial: { opacity: 0, x: 44 },  whileInView: { opacity: 1, x: 0 },  viewport: vp, transition: { duration: 0.7,  ease, delay } });
 
 const details = [
   { icon: "bx bx-code-alt",  text: "Web Developer  ·  Software Engineer" },

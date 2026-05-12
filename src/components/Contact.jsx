@@ -45,7 +45,8 @@ function GitHubStats({ username }) {
     <motion.div
       className="gh-stats-wrapper"
       initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
     >
       <h3 className="gh-stats-heading">
@@ -67,8 +68,9 @@ function GitHubStats({ username }) {
               key={s.label}
               className="gh-stat-card"
               initial={{ opacity: 0, scale: 0.88 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
               whileHover={{ y: -4, scale: 1.04 }}
             >
               <i className={s.icon} />
@@ -87,8 +89,9 @@ function SocialBar() {
     <motion.div
       className="social-bar"
       initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
     >
       {socialLinks.map((s, i) => (
         <motion.a
@@ -101,8 +104,9 @@ function SocialBar() {
           title={s.label}
           style={{ "--brand": s.color }}
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.3 + i * 0.1 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.45, delay: 0.1 + i * 0.1 }}
           whileHover={{ scale: 1.06, y: -4 }}
           whileTap={{ scale: 0.96 }}
         >
@@ -136,8 +140,9 @@ function CopyEmail({ email }) {
     <motion.div
       className="copy-email-wrapper"
       initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
     >
       <p className="copy-email-label">Get in touch</p>
       <div className="copy-email-box">
@@ -165,7 +170,8 @@ export default function Contact() {
       <motion.h2
         className="heading"
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         My <span>Socials</span>

@@ -33,7 +33,8 @@ export default function Education() {
       <motion.h2
         className="heading"
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         My <span>Education</span>
@@ -44,7 +45,8 @@ export default function Education() {
         <motion.div
           className="edu-list"
           initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         >
           {schools.map((s, i) => (
@@ -56,8 +58,9 @@ export default function Education() {
               tabIndex={0}
               role="button"
               initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: 0.08 + i * 0.1 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="edu-card-inner">
@@ -81,7 +84,8 @@ export default function Education() {
         <motion.div
           className="edu-image"
           initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         >
           <div className="edu-hero">

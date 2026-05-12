@@ -162,14 +162,15 @@ export default function Experience() {
   return (
     <section
       className="services"
-      id="experience"
+      id="services"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <motion.h2
         className="heading"
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         My <span>Projects</span>
@@ -202,11 +203,12 @@ export default function Experience() {
                 className="exp-card"
                 style={cardStyle}
                 initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
                 transition={{
                   duration: 0.55,
                   ease: [0.22, 1, 0.36, 1],
-                  delay: 0.08 + i * 0.09,
+                  delay: 0.05 + i * 0.07,
                 }}
                 whileHover={{ y: -6, scale: 1.01 }}
               >

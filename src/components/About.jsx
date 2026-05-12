@@ -1,22 +1,27 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
 import { GiBasketballBall } from "react-icons/gi";
+
+const vp = { once: true, margin: "-60px" };
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
-  animate: { opacity: 1, y: 0 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: vp,
   transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
 });
 
 const fadeLeft = (delay = 0) => ({
   initial: { opacity: 0, x: -44 },
-  animate: { opacity: 1, x: 0 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: vp,
   transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], delay },
 });
 
 const fadeRight = (delay = 0) => ({
   initial: { opacity: 0, x: 44 },
-  animate: { opacity: 1, x: 0 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: vp,
   transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], delay },
 });
 
@@ -32,13 +37,6 @@ const stats = [
   { value: "3+",  label: "Years Coding" },
   { value: "10+", label: "Technologies" },
   { value: "2",   label: "ML Models" },
-];
-
-const traits = [
-  { icon: "bx bx-bulb",       label: "Problem Solver" },
-  { icon: "bx bx-layer",      label: "Clean Code" },
-  { icon: "bx bx-trending-up",label: "Fast Learner" },
-  { icon: "bx bx-group",      label: "Team Player" },
 ];
 
 const hobbies = [
@@ -59,28 +57,49 @@ const photos = [
   { src: "/images/684971070_2741610899539307_6143368263426878188_n.webp",  alt: "Patrick — basketball jersey" },
 ];
 
-function PhotoSlot({ photo, index }) {
+function GalleryCard({ photo }) {
   const [broken, setBroken] = useState(false);
-
   return (
     <motion.div
-      className="about-me-photo-slot"
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.42, delay: 0.36 + index * 0.07 }}
+      className="gallery-card"
+      whileHover={{ y: -6, scale: 1.04 }}
+      transition={{ type: "spring", stiffness: 320, damping: 22 }}
     >
       {photo.src && !broken ? (
-        <img
-          src={photo.src}
-          alt={photo.alt}
-          onError={() => setBroken(true)}
-        />
+        <img src={photo.src} alt={photo.alt} onError={() => setBroken(true)} loading="lazy" />
       ) : (
-        <span className="about-me-photo-placeholder">
+        <span className="gallery-card__placeholder">
           <i className="bx bx-image-add" />
         </span>
       )}
     </motion.div>
+  );
+}
+
+function GalleryMarquee({ photos }) {
+  const trackRef = useRef(null);
+  const x = useMotionValue(0);
+  const [paused, setPaused] = useState(false);
+
+  useAnimationFrame((_, delta) => {
+    if (paused || !trackRef.current) return;
+    const halfWidth = trackRef.current.scrollWidth / 2;
+    const next = x.get() - 0.38 * (delta / 16.667);
+    x.set(next <= -halfWidth ? 0 : next);
+  });
+
+  return (
+    <div
+      className="gallery-marquee-viewport"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <motion.div ref={trackRef} className="gallery-marquee-track" style={{ x }}>
+        {[...photos, ...photos].map((photo, i) => (
+          <GalleryCard key={i} photo={photo} />
+        ))}
+      </motion.div>
+    </div>
   );
 }
 
@@ -91,7 +110,8 @@ export default function About() {
       <motion.h2
         className="heading"
         initial={{ opacity: 0, y: -22 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={vp}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         About <span>Me</span>
@@ -114,16 +134,18 @@ export default function About() {
           <motion.div
             className="about-me-stats"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.7 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={vp}
+            transition={{ duration: 0.55, delay: 0.1 }}
           >
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
                 className="about-me-stat"
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.72 + i * 0.07 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={vp}
+                transition={{ duration: 0.4, delay: 0.12 + i * 0.07 }}
                 whileHover={{ y: -4, scale: 1.06 }}
               >
                 <span className="about-me-stat-value">{s.value}</span>
@@ -175,23 +197,6 @@ export default function About() {
             ))}
           </motion.div>
 
-          {/* Trait chips */}
-          <motion.div className="about-me-traits" {...fadeUp(0.68)}>
-            {traits.map((t, i) => (
-              <motion.span
-                key={t.label}
-                className="about-me-trait"
-                initial={{ opacity: 0, scale: 0.82 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.38, delay: 0.7 + i * 0.07 }}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.96 }}
-              >
-                <i className={t.icon} />
-                {t.label}
-              </motion.span>
-            ))}
-          </motion.div>
         </motion.div>
 
       </div>
@@ -200,8 +205,9 @@ export default function About() {
       <motion.div
         className="about-me-extra"
         initial={{ opacity: 0, y: 36 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={vp}
+        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
       >
         {/* Hobbies */}
         <div className="about-me-hobbies-block">
@@ -214,8 +220,9 @@ export default function About() {
                 key={h.label}
                 className="about-me-hobby"
                 initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.35 + i * 0.07 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={vp}
+                transition={{ duration: 0.4, delay: 0.05 + i * 0.07 }}
                 whileHover={{ y: -5, scale: 1.06 }}
               >
                 {h.ReactIcon
@@ -232,10 +239,10 @@ export default function About() {
           <p className="about-me-section-eyebrow">
             <i className="bx bx-images" /> Gallery
           </p>
-          <div className="about-me-photos">
-            {photos.map((p, i) => (
-              <PhotoSlot key={i} photo={p} index={i} />
-            ))}
+          <div className="gallery-marquee-wrapper">
+            <div className="gallery-marquee-fade gallery-marquee-fade--left" />
+            <GalleryMarquee photos={photos} />
+            <div className="gallery-marquee-fade gallery-marquee-fade--right" />
           </div>
         </div>
       </motion.div>
