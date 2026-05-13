@@ -124,7 +124,7 @@ export default function About() {
 
           {/* Glowing image frame */}
           <div className="about-me-frame">
-            <img src="/images/pp.jpg" alt="Patrick Eva" className="about-me-photo" />
+            <img src="/images/aboutP.jpg" alt="Patrick Eva" className="about-me-photo" />
             <div className="about-me-ring about-me-ring--1" aria-hidden="true" />
             <div className="about-me-ring about-me-ring--2" aria-hidden="true" />
             <div className="about-me-ring about-me-ring--3" aria-hidden="true" />
