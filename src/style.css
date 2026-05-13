@@ -6044,14 +6044,6 @@ span { color: var(--main-color); }
 /* Typing cursor on degree text */
 .home-degree {
   display: inline-block;
-  border-right: 2px solid var(--main-color);
-  animation: blinkCursor 1s step-end infinite;
-  padding-right: 4px;
-}
-
-@keyframes blinkCursor {
-  0%, 100% { border-color: var(--main-color); }
-  50%       { border-color: transparent; }
 }
 
 /* Home details — staggered fade in */
