@@ -1994,6 +1994,36 @@ span { color: var(--main-color); }
 
 .footer-iconTop a i { font-size: 2.4rem; color: #333; }
 
+.footer-views {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(8px);
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-views i {
+    font-size: 1.5rem;
+    color: var(--main-color);
+}
+
+.footer-views span {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.footer-views-label {
+    font-size: 1.2rem !important;
+    font-weight: 400 !important;
+    color: #666 !important;
+}
+
 /* ============================================================
    ANIMATIONS
 ============================================================ */
@@ -6700,6 +6730,37 @@ span { color: var(--main-color); }
   opacity: 0.65;
   text-align: center;
   line-height: 1.2;
+}
+
+/* Visitors counter pill */
+.about-me-visitors {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  background: var(--card-bg);
+  border: 1px solid rgba(28,178,223,0.3);
+  border-radius: 50px;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  opacity: 0.75;
+  cursor: default;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.about-me-visitors:hover {
+  opacity: 1;
+  border-color: rgba(28,178,223,0.6);
+}
+
+.about-me-visitors i {
+  font-size: 1.4rem;
+  color: var(--main-color);
+}
+
+.about-me-visitors-count {
+  font-weight: 700;
+  color: var(--main-color);
 }
 
 /* ── CONTENT COLUMN ── */

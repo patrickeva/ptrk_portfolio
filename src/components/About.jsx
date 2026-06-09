@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
 import { GiBasketballBall } from "react-icons/gi";
+import { useViewCounter } from "../hooks/useViewCounter";
 
 const vp = { once: true, margin: "-60px" };
 
@@ -41,7 +42,7 @@ const stats = [
 
 const hobbies = [
   { ReactIcon: GiBasketballBall, label: "Basketball" },
-  { icon: "bx bx-beer",        label: "Drinker" },
+  { icon: "bx bx-coffee",       label: "Coffee" },
   { icon: "bx bx-music",       label: "Music" },
   { icon: "bx bx-movie-play",  label: "Movies & Anime" },
   { icon: "bx bx-code-block",  label: "Open Source" },
@@ -104,6 +105,8 @@ function GalleryMarquee({ photos }) {
 }
 
 export default function About() {
+  const views = useViewCounter();
+
   return (
     <section className="about-me site-section" id="about">
       {/* Section heading */}
@@ -152,6 +155,21 @@ export default function About() {
                 <span className="about-me-stat-label">{s.label}</span>
               </motion.div>
             ))}
+          </motion.div>
+
+          {/* Visitors counter */}
+          <motion.div
+            className="about-me-visitors"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={vp}
+            transition={{ duration: 0.45, delay: 0.3 }}
+          >
+            <i className="bx bx-show" />
+            <span className="about-me-visitors-count">
+              {views !== null ? views.toLocaleString() : "—"}
+            </span>
+            <span>{views === 1 ? "view" : "views"}</span>
           </motion.div>
         </motion.div>
 
