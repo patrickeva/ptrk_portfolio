@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 
 export default function Navbar({ activeSection, navigateTo }) {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? saved === 'dark' : true; // default to dark mode
+  });
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    document.body.classList.add('dark-mode');
-  }, []);
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
-    document.body.classList.toggle('dark-mode');
   };
 
   const handleNav = (e, sectionId) => {

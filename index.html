@@ -14,6 +14,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   </head>
   <body>
+    <script>
+      (function () {
+        var saved = localStorage.getItem('theme');
+        if (saved ? saved === 'dark' : true) {
+          document.body.classList.add('dark-mode');
+        }
+      })();
+    </script>
     <!-- React root -->
     <div id="root"></div>
     <!-- External JS libraries -->

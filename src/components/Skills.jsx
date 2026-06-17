@@ -8,7 +8,7 @@ const skillData = [
   { name: "React",                level: 60, icon: "bxl-react",    color: "#61dafb" },
   { name: "Backend Development",  level: 60, icon: "bx-server",    color: "#0ea5e9" },
   { name: "Python",               level: 70, icon: "bxl-python",   color: "#3776ab" },
-  { name: "Machine Learning",     level: 70, icon: "bx-brain",     color: "#8b5cf6" },
+  { name: "Machine Learning",     level: 50, icon: "bx-brain",     color: "#8b5cf6" },
 ];
 
 function SkillCard({ skill, index }) {

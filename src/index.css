@@ -10,21 +10,9 @@
     font-family: 'Poppins', sans-serif; /* Palitan base sa font mo */
 }
 
-:root {
-    --bg-color: #1f242d; /* Gamitin ang kulay mo dati */
-    --second-bg-color: #323946;
-    --text-color: #fff;
-    --main-color: #0ef;
-}
-
 html {
     font-size: 62.5%;
     overflow-x: hidden;
-}
-
-body {
-    background: var(--bg-color);
-    color: var(--text-color);
 }
 
 /* Tailwind utilities — preflight is disabled so this won't reset existing styles */

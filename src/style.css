@@ -17,6 +17,7 @@
 
 :root{
     --bg-color: #f8faff;
+    --second-bg-color: #eef3fb;
     --text-color: #1a1a2e;
     --main-color: #1CB2DF;
     --white-color: #f8faff;
@@ -29,6 +30,7 @@
 
 .dark-mode{
     --bg-color: #080820;
+    --second-bg-color: #11112e;
     --text-color: #e8eaff;
     --white-color: #080820;
     --card-bg: rgba(12,12,40,0.75);

@@ -21,7 +21,7 @@ ROLES & EXPERTISE:
 TECHNICAL SKILLS:
 - HTML & CSS — 70%
 - Python — 70%
-- Machine Learning — 70%
+- Machine Learning — 50%
 - JavaScript — 60%
 - React — 60%
 - Backend Development — 60%
