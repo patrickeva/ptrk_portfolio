@@ -38,6 +38,16 @@
     --shadow-color: rgba(0,0,0,.5);
 }
 
+/* While the theme class is being swapped, kill every transition so the
+   dozens of cards/blur layers repaint in one frame instead of animating
+   in lockstep, which is what made the toggle feel laggy. */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+    transition: none !important;
+}
+
 /* ============================================================
    ANIMATED BACKGROUND
 ============================================================ */

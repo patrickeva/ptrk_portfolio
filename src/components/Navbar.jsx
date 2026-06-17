@@ -8,8 +8,18 @@ export default function Navbar({ activeSection, navigateTo }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    document.body.classList.toggle('dark-mode', isDarkMode);
+    const body = document.body;
+    // Disable transitions for the swap so colors apply instantly, then
+    // re-enable on the next frame so hover/interaction animations keep working.
+    body.classList.add('theme-switching');
+    body.classList.toggle('dark-mode', isDarkMode);
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    void body.offsetHeight; // force layout with transitions still disabled
+
+    const id = requestAnimationFrame(() => {
+      body.classList.remove('theme-switching');
+    });
+    return () => cancelAnimationFrame(id);
   }, [isDarkMode]);
 
   const toggleDarkMode = () => {
