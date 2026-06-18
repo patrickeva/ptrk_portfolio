@@ -40,11 +40,14 @@
 
 /* While the theme class is being swapped, kill every transition so the
    dozens of cards/blur layers repaint in one frame instead of animating
-   in lockstep, which is what made the toggle feel laggy. */
-.theme-switching,
-.theme-switching *,
-.theme-switching *::before,
-.theme-switching *::after {
+   in lockstep, which is what made the toggle feel laggy.
+   Selectors are boosted with the "body" type so this beats the many
+   single-class "!important" transition rules later in this file
+   (equal specificity + later source order would otherwise win). */
+body.theme-switching,
+body.theme-switching *,
+body.theme-switching *::before,
+body.theme-switching *::after {
     transition: none !important;
 }
 

@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export default function Navbar({ activeSection, navigateTo }) {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved ? saved === 'dark' : true; // default to dark mode
-  });
+  const [isDarkMode, setIsDarkMode] = useState(true); // always open in dark mode
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -13,7 +10,6 @@ export default function Navbar({ activeSection, navigateTo }) {
     // re-enable on the next frame so hover/interaction animations keep working.
     body.classList.add('theme-switching');
     body.classList.toggle('dark-mode', isDarkMode);
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     void body.offsetHeight; // force layout with transitions still disabled
 
     const id = requestAnimationFrame(() => {
