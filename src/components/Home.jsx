@@ -66,7 +66,7 @@ export default function Home() {
         {/* CTA buttons */}
         <motion.div className="home-buttons" {...fadeUp(0.58)}>
           <motion.a
-            href="/cv/Patrick_CV.pdf"
+            href="/cv/Eva_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn--primary"
