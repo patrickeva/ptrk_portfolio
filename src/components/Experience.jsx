@@ -7,6 +7,17 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const projects = [
   {
+    image: "/images/BusTracking.png",
+    title: "BMTC Minibus Tracker",
+    subtitle: "Fleet Management System · Real-Time GPS Tracking",
+    description:
+      "A real-time GPS fleet tracking system built for a transport cooperative operating the SM Lemery–SM Lipa route. Passengers follow live minibus locations on a public map with no app or sign-up required, while drivers use a native Android app that keeps transmitting even when the phone is closed or the screen is off.",
+    tags: ["React", "Supabase", "PostgreSQL", "Capacitor", "Java", "Leaflet"],
+    link: "https://github.com/patrickeva/minibus-tracker",
+    liveLink: "https://minibus-tracker.pages.dev/",
+  },
+
+  {
     image: "/images/franchiseBG.png",
     title: "Tricycle Franchise Tracker",
     subtitle: "Real-Time Monitoring · Driver Franchises & Licenses",
