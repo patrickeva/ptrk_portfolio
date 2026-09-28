@@ -1497,6 +1497,44 @@ body.dark-mode .nav__pill {
     grid-template-columns: 1fr;
   }
 
+  .about__photo {
+    width: min(64vw, 240px);
+    margin-inline: auto;
+  }
+
+  .about__photo-tag {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+
+  .about__photo-tag strong {
+    font-size: 0.8rem;
+  }
+
+  .about__photo-tag small {
+    font-size: 0.68rem;
+  }
+
+  .about__views {
+    padding: 4px 8px;
+    font-size: 0.72rem;
+  }
+
+  .about__views small {
+    display: none;
+  }
+
+  .stat {
+    padding: 14px 16px;
+  }
+
+  .stat__value {
+    font-size: 1.7rem;
+  }
+
   .gallery-item {
     width: 170px;
   }
