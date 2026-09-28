@@ -2,32 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Favicon (circular) -->
-    <link rel="icon" type="image/png" href="/images/pp_circle.png" />
-    <link rel="shortcut icon" type="image/png" href="/images/pp_circle.png" />
-    <link rel="apple-touch-icon" href="/images/pp_circle.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Patrick Eva</title>
-    <!-- Boxicons for icons -->
+    <title>Patrick Eva — Web Developer & Software Engineer</title>
+    <meta
+      name="description"
+      content="Patrick Eva — BS Computer Science, web developer, and software engineer from Batangas building modern web apps and machine learning solutions."
+    />
+    <meta name="theme-color" content="#05070d" />
+
+    <link rel="icon" type="image/png" href="/images/pp_circle.png" />
+    <link rel="apple-touch-icon" href="/images/pp_circle.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   </head>
   <body>
     <script>
       (function () {
-        var saved = localStorage.getItem('theme');
-        if (saved ? saved === 'dark' : true) {
-          document.body.classList.add('dark-mode');
-        }
+        var saved = null;
+        try { saved = localStorage.getItem('theme'); } catch (e) {}
+        if (saved !== 'light') document.body.classList.add('dark-mode');
       })();
     </script>
-    <!-- React root -->
     <div id="root"></div>
-    <!-- External JS libraries -->
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <!-- React entry point -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

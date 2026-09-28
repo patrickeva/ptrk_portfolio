@@ -1,9 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
-/* =========================================================
-   PROJECT DATA
-========================================================= */
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { Reveal, SectionHeading, ease } from "./ui";
 
 const projects = [
   {
@@ -16,7 +13,6 @@ const projects = [
     link: "https://github.com/patrickeva/minibus-tracker",
     liveLink: "https://minibus-tracker.pages.dev/",
   },
-
   {
     image: "/images/franchiseBG.png",
     title: "Tricycle Franchise Tracker",
@@ -27,7 +23,6 @@ const projects = [
     link: "https://github.com/patrickeva/Tric-Franchise-Tracker",
     liveLink: "https://tric-franchise-tracker.vercel.app/",
   },
-
   {
     image: "/images/sbBackground.png",
     title: "Cuenca Legislative Tracker",
@@ -38,12 +33,6 @@ const projects = [
     link: "https://github.com/patrickeva/sb-cuenca-docsys",
     liveLink: "https://sb-cuenca-docsys.vercel.app/",
   },
-
-  /* =======================================================
-     PROJECT #03
-     PATRICK F WEB
-  ======================================================= */
-
   {
     image: "/images/freelanceWEB.png",
     title: "Patrick F Web",
@@ -54,7 +43,6 @@ const projects = [
     link: "https://github.com/patrickeva/patrick-FWeb",
     liveLink: "https://patrick-f-web.vercel.app/",
   },
-
   {
     image: "/images/ampalaya.jpg",
     title: "NPK Deficiency Detector",
@@ -65,7 +53,6 @@ const projects = [
     link: "https://github.com/itzjmbruhhh/NPK_Deficiency_Classifier_IoT",
     liveLink: "https://npknows.vercel.app/",
   },
-
   {
     image: "/images/leaf.jpg",
     title: "Leaf it Up to Me",
@@ -75,7 +62,6 @@ const projects = [
     tags: ["MobileNetV2", "CNN", "Python", "Web App"],
     link: "https://github.com/itzjmbruhhh/coffee_leaf_diseases_classifier",
   },
-
   {
     image: "/images/myPortfolio.png",
     title: "Personal Portfolio",
@@ -85,7 +71,6 @@ const projects = [
     tags: ["React", "Framer Motion", "CSS3", "Vite"],
     link: "https://github.com/patrickeva/ptrk_portfolio",
   },
-
   {
     image: "/images/NU_Admission.jpg",
     title: "AI-Powered Admission System",
@@ -97,367 +82,192 @@ const projects = [
   },
 ];
 
+const pad = (n) => String(n).padStart(2, "0");
 
-/* =========================================================
-   SLIDE ANIMATION
-========================================================= */
-
-const slideVariants = {
-  enter: (direction) => ({
-    opacity: 0,
-    x: direction === "next" ? 60 : -60,
-  }),
-
-  center: {
-    opacity: 1,
-    x: 0,
-  },
-
-  exit: (direction) => ({
-    opacity: 0,
-    x: direction === "next" ? -60 : 60,
-  }),
+const bodyVariants = {
+  enter: {},
+  center: { transition: { staggerChildren: 0.06, delayChildren: 0.15 } },
+  exit: {},
 };
 
-
-/* =========================================================
-   EXPERIENCE / PROJECTS COMPONENT
-========================================================= */
+const bodyItem = {
+  enter: { opacity: 0, y: 18 },
+  center: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+  exit: { opacity: 0, y: -10, transition: { duration: 0.25 } },
+};
 
 export default function Experience() {
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState("next");
-  const [paused, setPaused] = useState(false);
+  const [direction, setDirection] = useState(1);
+  const [hovering, setHovering] = useState(false);
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef, { amount: 0.35 });
+  const paused = hovering || !inView;
 
-
-  /* =======================================================
-     CHANGE PROJECT
-  ======================================================= */
-
-  const goToProject = useCallback((newDirection, newIndex) => {
-    setDirection(newDirection);
-    setIndex(newIndex);
+  const goTo = useCallback((i, dir) => {
+    setDirection(dir);
+    setIndex((i + projects.length) % projects.length);
   }, []);
 
-
-  /* =======================================================
-     NEXT PROJECT
-  ======================================================= */
-
-  const next = useCallback(() => {
-    goToProject(
-      "next",
-      (index + 1) % projects.length
-    );
-  }, [goToProject, index]);
-
-
-  /* =======================================================
-     PREVIOUS PROJECT
-  ======================================================= */
-
-  const prev = useCallback(() => {
-    goToProject(
-      "prev",
-      (index - 1 + projects.length) % projects.length
-    );
-  }, [goToProject, index]);
-
-
-  /* =======================================================
-     AUTO SLIDE
-  ======================================================= */
+  const next = useCallback(() => goTo(index + 1, 1), [goTo, index]);
+  const prev = useCallback(() => goTo(index - 1, -1), [goTo, index]);
 
   useEffect(() => {
-    if (paused) {
-      return;
-    }
-
-    const timer = setInterval(() => {
-      next();
-    }, 4500);
-
-    return () => {
-      clearInterval(timer);
+    if (!inView) return;
+    const onKey = (e) => {
+      if (e.target.closest?.("input, textarea")) return;
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
     };
-  }, [paused, next]);
-
-
-  /* =======================================================
-     CURRENT PROJECT
-  ======================================================= */
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [inView, next, prev]);
 
   const project = projects[index];
 
-  const currentNumber = String(index + 1).padStart(2, "0");
-
-  const totalProjects = String(projects.length).padStart(2, "0");
-
-  const progress =
-    ((index + 1) / projects.length) * 100;
-
-
-  /* =======================================================
-     RENDER
-  ======================================================= */
-
   return (
-    <section
-      className="projects-section"
-      id="services"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
+    <section className="section projects" id="services" ref={sectionRef}>
+      <div className="container">
+        <SectionHeading
+          index="03"
+          eyebrow="Selected work"
+          title="My"
+          accent="Projects"
+          subtitle="Real systems built for real users — from government platforms to deep learning research."
+        />
 
-      {/* ===================================================
-          SECTION HEADER
-      =================================================== */}
-
-      <motion.h2
-        className="heading"
-        initial={{
-          opacity: 0,
-          y: -20,
-        }}
-        whileInView={{
-          opacity: 1,
-          y: 0,
-        }}
-        viewport={{
-          once: true,
-          margin: "-60px",
-        }}
-        transition={{
-          duration: 0.6,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-      >
-        My <span>Projects</span>
-      </motion.h2>
-
-
-      {/* ===================================================
-          PROJECT STAGE
-      =================================================== */}
-
-      <div className="proj-stage">
-
-        <AnimatePresence
-          mode="wait"
-          custom={direction}
+        <Reveal
+          className="projects__stage"
+          onMouseEnter={() => setHovering(true)}
+          onMouseLeave={() => setHovering(false)}
         >
-
-          <motion.div
-            key={index}
-            className="proj-card"
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              duration: 0.42,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
-
-            {/* =============================================
-                PROJECT IMAGE
-            ============================================== */}
-
-            <div className="proj-card__visual">
-
-              <img
-                src={project.image}
-                alt={`${project.title} project preview`}
-                loading="lazy"
-              />
-
-              <div className="proj-card__img-overlay" />
-
-              <span className="proj-card__big-num">
-                {currentNumber}
-              </span>
-
-            </div>
-
-
-            {/* =============================================
-                PROJECT INFORMATION
-            ============================================== */}
-
-            <div className="proj-card__body">
-
-              {/* Project counter */}
-
-              <span className="proj-card__counter">
-                {currentNumber} / {totalProjects}
-              </span>
-
-
-              {/* Project title */}
-
-              <h3 className="proj-card__title">
-                {project.title}
-              </h3>
-
-
-              {/* Project subtitle */}
-
-              <p className="proj-card__subtitle">
-                {project.subtitle}
-              </p>
-
-
-              {/* Project description */}
-
-              <p className="proj-card__desc">
-                {project.description}
-              </p>
-
-
-              {/* =========================================
-                  TECHNOLOGY TAGS
-              ========================================== */}
-
-              <div className="proj-card__tags">
-
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="proj-card__tag"
-                  >
-                    {tag}
-                  </span>
-                ))}
-
-              </div>
-
-
-              {/* =========================================
-                  PROJECT ACTIONS
-              ========================================== */}
-
-              <div className="proj-card__actions">
-
-                {/* GitHub */}
-
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="proj-btn proj-btn--ghost"
-                  aria-label={`View ${project.title} source code on GitHub`}
+          <AnimatePresence mode="wait" custom={direction} initial={false}>
+            <motion.article
+              key={index}
+              className="card project"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div
+                className="project__visual"
+                custom={direction}
+                variants={{
+                  enter: (d) => ({ clipPath: d > 0 ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)" }),
+                  center: { clipPath: "inset(0 0 0 0%)", transition: { duration: 0.9, ease } },
+                  exit: { opacity: 0, transition: { duration: 0.25 } },
+                }}
+                initial="enter"
+                animate="center"
+                exit="exit"
+              >
+                <span className="project__num">{pad(index + 1)}</span>
+                <motion.div
+                  className="project__window"
+                  initial={{ y: 40, scale: 0.94 }}
+                  animate={{ y: 0, scale: 1 }}
+                  transition={{ duration: 1.1, ease, delay: 0.15 }}
                 >
-                  <i className="bx bxl-github"></i>
+                  <div className="project__window-bar" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                  <img src={project.image} alt={`${project.title} preview`} />
+                </motion.div>
+              </motion.div>
 
-                  <span>GitHub</span>
-                </a>
-
-
-                {/* Live Website */}
-
-                {project.liveLink && (
+              <motion.div
+                className="project__body"
+                variants={bodyVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+              >
+                <motion.span className="project__counter" variants={bodyItem}>
+                  Project {pad(index + 1)} / {pad(projects.length)}
+                </motion.span>
+                <motion.h3 className="project__title" variants={bodyItem}>
+                  {project.title}
+                </motion.h3>
+                <motion.p className="project__subtitle" variants={bodyItem}>
+                  {project.subtitle}
+                </motion.p>
+                <motion.p className="project__desc" variants={bodyItem}>
+                  {project.description}
+                </motion.p>
+                <motion.div className="tags" variants={bodyItem}>
+                  {project.tags.map((tag) => (
+                    <span key={tag} className="tag">{tag}</span>
+                  ))}
+                </motion.div>
+                <motion.div className="project__actions" variants={bodyItem}>
                   <a
-                    href={project.liveLink}
+                    href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="proj-btn proj-btn--solid"
-                    aria-label={`View live ${project.title} website`}
+                    className="btn btn--ghost"
+                    aria-label={`View ${project.title} source code on GitHub`}
                   >
-                    <i className="bx bx-link-external"></i>
-
-                    <span>Live Demo</span>
+                    <i className="bx bxl-github" /> GitHub
                   </a>
-                )}
+                  {project.liveLink && (
+                    <a
+                      href={project.liveLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn--primary"
+                      aria-label={`View live ${project.title} website`}
+                    >
+                      <i className="bx bx-link-external" /> Live Demo
+                    </a>
+                  )}
+                </motion.div>
+              </motion.div>
+            </motion.article>
+          </AnimatePresence>
 
-              </div>
+          <div className="projects__controls">
+            <span className="projects__count">
+              <strong>{pad(index + 1)}</strong>
+              <span>/ {pad(projects.length)}</span>
+            </span>
 
+            <div className="projects__segments" role="tablist" aria-label="Projects">
+              {projects.map((p, i) => (
+                <button
+                  key={p.title}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === index}
+                  aria-label={`${p.title} (${i + 1} of ${projects.length})`}
+                  className={`seg${i < index ? " is-done" : ""}${i === index ? " is-active" : ""}`}
+                  onClick={() => goTo(i, i >= index ? 1 : -1)}
+                >
+                  <span className="seg__bar">
+                    <span
+                      key={i === index ? `active-${index}` : i}
+                      className="seg__fill"
+                      style={{ animationPlayState: paused ? "paused" : "running" }}
+                      onAnimationEnd={i === index ? next : undefined}
+                    />
+                  </span>
+                </button>
+              ))}
             </div>
 
-          </motion.div>
-
-        </AnimatePresence>
-
-
-        {/* =================================================
-            SIDE PREVIOUS BUTTON
-        ================================================== */}
-
-        <button
-          type="button"
-          className="proj-arrow proj-arrow--prev"
-          onClick={prev}
-          aria-label="Previous project"
-        >
-          <i className="bx bx-chevron-left"></i>
-        </button>
-
-
-        {/* =================================================
-            SIDE NEXT BUTTON
-        ================================================== */}
-
-        <button
-          type="button"
-          className="proj-arrow proj-arrow--next"
-          onClick={next}
-          aria-label="Next project"
-        >
-          <i className="bx bx-chevron-right"></i>
-        </button>
-
+            <div className="projects__arrows">
+              <button type="button" className="icon-btn icon-btn--lg" onClick={prev} aria-label="Previous project">
+                <i className="bx bx-left-arrow-alt" />
+              </button>
+              <button type="button" className="icon-btn icon-btn--lg" onClick={next} aria-label="Next project">
+                <i className="bx bx-right-arrow-alt" />
+              </button>
+            </div>
+          </div>
+        </Reveal>
       </div>
-
-
-      {/* ===================================================
-          PROJECT PROGRESS NAVIGATION
-      =================================================== */}
-
-      <div className="proj-nav">
-
-        {/* Previous */}
-
-        <button
-          type="button"
-          className="proj-nav__arrow"
-          onClick={prev}
-          aria-label="Previous project"
-        >
-          <i className="bx bx-arrow-back"></i>
-        </button>
-
-
-        {/* Progress */}
-
-        <div
-          className="proj-progress"
-          aria-label={`Project ${currentNumber} of ${totalProjects}`}
-        >
-
-          <div
-            className="proj-progress__fill"
-            style={{
-              width: `${progress}%`,
-            }}
-          />
-
-        </div>
-
-
-        {/* Next */}
-
-        <button
-          type="button"
-          className="proj-nav__arrow"
-          onClick={next}
-          aria-label="Next project"
-        >
-          <i className="bx bx-right-arrow-alt"></i>
-        </button>
-
-      </div>
-
     </section>
   );
 }

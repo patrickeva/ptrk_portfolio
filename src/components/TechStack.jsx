@@ -1,10 +1,9 @@
-import { useRef, useState } from 'react';
-import { motion, useAnimationFrame, useMotionValue } from 'framer-motion';
 import {
   SiReact, SiVite, SiSupabase, SiFirebase, SiTailwindcss,
   SiTypescript, SiPython, SiNodedotjs, SiTensorflow, SiDjango,
   SiGit, SiPostgresql,
 } from 'react-icons/si';
+import { Marquee, Reveal } from './ui';
 
 const techStack = [
   { name: 'React',        Icon: SiReact,       color: '#61DAFB' },
@@ -21,67 +20,33 @@ const techStack = [
   { name: 'PostgreSQL',   Icon: SiPostgresql,  color: '#7B9FE0' },
 ];
 
-function TechCard({ item }) {
+const half = Math.ceil(techStack.length / 2);
+const rows = [techStack.slice(0, half), techStack.slice(half)];
+
+function TechPill({ item }) {
   return (
-    <motion.div
-      className="tech-card"
-      whileHover={{ y: -8, scale: 1.07 }}
-      transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-    >
-      <div className="tech-card__icon" style={{ color: item.color }}>
-        <item.Icon size={34} />
-      </div>
-      <span className="tech-card__name">{item.name}</span>
-    </motion.div>
-  );
-}
-
-function InfiniteMarquee({ items, speed = 0.55 }) {
-  const trackRef = useRef(null);
-  const x = useMotionValue(0);
-  const [paused, setPaused] = useState(false);
-
-  useAnimationFrame((_, delta) => {
-    if (paused || !trackRef.current) return;
-    const halfWidth = trackRef.current.scrollWidth / 2;
-    const next = x.get() - speed * (delta / 16.667);
-    x.set(next <= -halfWidth ? 0 : next);
-  });
-
-  return (
-    <div
-      className="tech-marquee-viewport"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <motion.div
-        ref={trackRef}
-        className="tech-marquee-track"
-        style={{ x }}
-      >
-        {[...items, ...items].map((item, i) => (
-          <TechCard key={i} item={item} />
-        ))}
-      </motion.div>
+    <div className="tech-pill" style={{ '--brand': item.color }}>
+      <item.Icon className="tech-pill__icon" />
+      <span>{item.name}</span>
     </div>
   );
 }
 
 export default function TechStack() {
   return (
-    <motion.div
-      className="tech-stack-section"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <p className="tech-stack-eyebrow">Tech Stack</p>
-      <div className="tech-marquee-wrapper">
-        <div className="tech-marquee-fade tech-marquee-fade--left" />
-        <InfiniteMarquee items={techStack} />
-        <div className="tech-marquee-fade tech-marquee-fade--right" />
+    <Reveal className="stack">
+      <p className="subhead subhead--center">
+        <i className="bx bx-layer" /> Tech Stack
+      </p>
+      <div className="stack__rows">
+        {rows.map((row, i) => (
+          <Marquee key={i} speed={0.45} reverse={i === 1}>
+            {row.map((item) => (
+              <TechPill key={item.name} item={item} />
+            ))}
+          </Marquee>
+        ))}
       </div>
-    </motion.div>
+    </Reveal>
   );
 }

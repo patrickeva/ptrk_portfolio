@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
 import TechStack from "./TechStack";
+import { SectionHeading, Spotlight, ease } from "./ui";
 
 const skillGroups = [
   {
@@ -28,59 +28,45 @@ const skillGroups = [
   },
 ];
 
-function SkillCard({ skill, index }) {
-  return (
-    <motion.article
-      className="skill-card"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="skill-card-top">
-        <div className="skill-icon-wrap">
-          <i className={`bx ${skill.icon}`} />
-        </div>
-        <h3>{skill.title}</h3>
-      </div>
-
-      <p className="skill-card-desc">{skill.description}</p>
-
-      <div className="skill-list">
-        {skill.skills.map((item) => (
-          <span key={item} className="skill-tag">
-            {item}
-          </span>
-        ))}
-      </div>
-    </motion.article>
-  );
-}
-
 export default function Skills() {
   return (
-    <section className="skills" id="skills">
-      <motion.div
-        className="skills-header"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <span className="section-label">WHAT I WORK WITH</span>
-        <h2 className="heading">
-          Skills & <span>Expertise</span>
-        </h2>
-        <p className="skills-intro">
-          The technologies and practices I use to design, build, and ship
-          modern web applications.
-        </p>
-      </motion.div>
+    <section className="section skills" id="skills">
+      <div className="container">
+        <SectionHeading
+          index="02"
+          eyebrow="What I work with"
+          title="Skills &"
+          accent="Expertise"
+          subtitle="The technologies and practices I use to design, build, and ship modern web applications."
+        />
 
-      <div className="skills-grid">
-        {skillGroups.map((skill, index) => (
-          <SkillCard key={skill.title} skill={skill} index={index} />
-        ))}
+        <div className="skills__grid">
+          {skillGroups.map((group, i) => (
+            <Spotlight
+              as="article"
+              key={group.title}
+              className="skill-card"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.7, ease, delay: (i % 2) * 0.1 }}
+            >
+              <span className="skill-card__num">{String(i + 1).padStart(2, "0")}</span>
+              <div className="skill-card__top">
+                <span className="icon-tile">
+                  <i className={`bx ${group.icon}`} />
+                </span>
+                <h3>{group.title}</h3>
+              </div>
+              <p className="skill-card__desc">{group.description}</p>
+              <div className="tags">
+                {group.skills.map((s) => (
+                  <span key={s} className="tag">{s}</span>
+                ))}
+              </div>
+            </Spotlight>
+          ))}
+        </div>
       </div>
 
       <TechStack />

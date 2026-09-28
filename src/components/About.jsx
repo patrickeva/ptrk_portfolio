@@ -1,36 +1,14 @@
-import { useState, useRef } from "react";
-import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import { GiBasketballBall } from "react-icons/gi";
 import { useViewCounter } from "../hooks/useViewCounter";
-
-const vp = { once: true, margin: "-60px" };
-
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 32 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: vp,
-  transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
-});
-
-const fadeLeft = (delay = 0) => ({
-  initial: { opacity: 0, x: -44 },
-  whileInView: { opacity: 1, x: 0 },
-  viewport: vp,
-  transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], delay },
-});
-
-const fadeRight = (delay = 0) => ({
-  initial: { opacity: 0, x: 44 },
-  whileInView: { opacity: 1, x: 0 },
-  viewport: vp,
-  transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], delay },
-});
+import { CountUp, Marquee, Reveal, SectionHeading, Spotlight, ease } from "./ui";
 
 const highlights = [
-  { icon: "bx bx-code-alt",    label: "Web Developer",  value: "Front-end & Full-stack" },
-  { icon: "bx bx-brain",       label: "ML Engineer",    value: "Deep Learning & AI" },
-  { icon: "bxs-graduation",    label: "CS Student",     value: "NU Lipa · 2022–2026" },
-  { icon: "bx bx-map-pin",     label: "Location",       value: "Cuenca, Batangas" },
+  { icon: "bx bx-code-alt",     label: "Web Developer", value: "Front-end & Full-stack" },
+  { icon: "bx bx-brain",        label: "ML Engineer",   value: "Deep Learning & AI" },
+  { icon: "bx bxs-graduation",  label: "CS Student",    value: "NU Lipa · 2022–2026" },
+  { icon: "bx bx-map-pin",      label: "Location",      value: "Cuenca, Batangas" },
 ];
 
 const stats = [
@@ -42,65 +20,34 @@ const stats = [
 
 const hobbies = [
   { ReactIcon: GiBasketballBall, label: "Basketball" },
-  { icon: "bx bx-coffee",       label: "Coffee" },
-  { icon: "bx bx-music",       label: "Music" },
-  { icon: "bx bx-movie-play",  label: "Movies & Anime" },
-  { icon: "bx bx-code-block",  label: "Open Source" },
-  { icon: "bx bx-dumbbell",    label: "Fitness" },
+  { icon: "bx bx-coffee",        label: "Coffee" },
+  { icon: "bx bx-music",         label: "Music" },
+  { icon: "bx bx-movie-play",    label: "Movies & Anime" },
+  { icon: "bx bx-code-block",    label: "Open Source" },
+  { icon: "bx bx-dumbbell",      label: "Fitness" },
 ];
 
 const photos = [
-  { src: "/images/690881314_1748629913178069_3056507052526470357_n.webp",  alt: "Patrick — graduation" },
-  { src: "/images/688440369_868476066282165_3935547601184706507_n.webp",   alt: "Patrick — cap selfie" },
-  { src: "/images/690500051_26732529726430846_4946360910293840089_n.webp",  alt: "Patrick — barong tagalog" },
-  { src: "/images/688702407_2076772699857409_7060957408574411639_n.webp",  alt: "Patrick — mirror selfie" },
-  { src: "/images/new2.jpg",                                               alt: "Patrick" },
-  { src: "/images/684971070_2741610899539307_6143368263426878188_n.webp",  alt: "Patrick — basketball jersey" },
+  { src: "/images/690881314_1748629913178069_3056507052526470357_n.webp", alt: "Patrick — graduation" },
+  { src: "/images/688440369_868476066282165_3935547601184706507_n.webp",  alt: "Patrick — cap selfie" },
+  { src: "/images/690500051_26732529726430846_4946360910293840089_n.webp", alt: "Patrick — barong tagalog" },
+  { src: "/images/688702407_2076772699857409_7060957408574411639_n.webp", alt: "Patrick — mirror selfie" },
+  { src: "/images/new2.jpg",                                              alt: "Patrick" },
+  { src: "/images/684971070_2741610899539307_6143368263426878188_n.webp", alt: "Patrick — basketball jersey" },
 ];
 
-function GalleryCard({ photo }) {
+function GalleryItem({ photo }) {
   const [broken, setBroken] = useState(false);
   return (
-    <motion.div
-      className="gallery-card"
-      whileHover={{ y: -6, scale: 1.04 }}
-      transition={{ type: "spring", stiffness: 320, damping: 22 }}
-    >
-      {photo.src && !broken ? (
-        <img src={photo.src} alt={photo.alt} onError={() => setBroken(true)} loading="lazy" />
-      ) : (
-        <span className="gallery-card__placeholder">
-          <i className="bx bx-image-add" />
+    <figure className="gallery-item">
+      {broken ? (
+        <span className="gallery-item__placeholder">
+          <i className="bx bx-image" />
         </span>
+      ) : (
+        <img src={photo.src} alt={photo.alt} loading="lazy" onError={() => setBroken(true)} />
       )}
-    </motion.div>
-  );
-}
-
-function GalleryMarquee({ photos }) {
-  const trackRef = useRef(null);
-  const x = useMotionValue(0);
-  const [paused, setPaused] = useState(false);
-
-  useAnimationFrame((_, delta) => {
-    if (paused || !trackRef.current) return;
-    const halfWidth = trackRef.current.scrollWidth / 2;
-    const next = x.get() - 0.38 * (delta / 16.667);
-    x.set(next <= -halfWidth ? 0 : next);
-  });
-
-  return (
-    <div
-      className="gallery-marquee-viewport"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <motion.div ref={trackRef} className="gallery-marquee-track" style={{ x }}>
-        {[...photos, ...photos].map((photo, i) => (
-          <GalleryCard key={i} photo={photo} />
-        ))}
-      </motion.div>
-    </div>
+    </figure>
   );
 }
 
@@ -108,163 +55,122 @@ export default function About() {
   const views = useViewCounter();
 
   return (
-    <section className="about-me site-section" id="about">
-      {/* Section heading */}
-      <motion.h2
-        className="heading"
-        initial={{ opacity: 0, y: -22 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={vp}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        About <span>Me</span>
-      </motion.h2>
+    <section className="section about" id="about">
+      <div className="container">
+        <SectionHeading index="01" eyebrow="About" title="About" accent="Me" />
 
-      <div className="about-me-grid">
-
-        {/* ── LEFT: image + badge + stats ── */}
-        <motion.div className="about-me-visual" {...fadeLeft(0.12)}>
-
-          {/* Glowing image frame */}
-          <div className="about-me-frame">
-            <img src="/images/aboutP.jpg" alt="Patrick Eva" className="about-me-photo" />
-            <div className="about-me-ring about-me-ring--1" aria-hidden="true" />
-            <div className="about-me-ring about-me-ring--2" aria-hidden="true" />
-            <div className="about-me-ring about-me-ring--3" aria-hidden="true" />
-          </div>
-
-          {/* Mini stats row */}
-          <motion.div
-            className="about-me-stats"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={vp}
-            transition={{ duration: 0.55, delay: 0.1 }}
-          >
-            {stats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                className="about-me-stat"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={vp}
-                transition={{ duration: 0.4, delay: 0.12 + i * 0.07 }}
-                whileHover={{ y: -4, scale: 1.06 }}
-              >
-                <span className="about-me-stat-value">{s.value}</span>
-                <span className="about-me-stat-label">{s.label}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Visitors counter */}
-          <motion.div
-            className="about-me-visitors"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={vp}
-            transition={{ duration: 0.45, delay: 0.3 }}
-          >
-            <i className="bx bx-show" />
-            <span className="about-me-visitors-count">
-              {views !== null ? views.toLocaleString() : "—"}
-            </span>
-            <span>{views === 1 ? "view" : "views"}</span>
-          </motion.div>
-        </motion.div>
-
-        {/* ── RIGHT: bio + highlights + traits ── */}
-        <motion.div className="about-me-content" {...fadeRight(0.18)}>
-
-          {/* Eyebrow */}
-          <motion.p className="about-me-eyebrow" {...fadeUp(0.28)}>
-            <i className="bx bx-user" /> Who I Am
-          </motion.p>
-
-          {/* Bio */}
-          <motion.p className="about-me-bio" {...fadeUp(0.36)}>
-            Hi! I'm <strong>Patrick Eva</strong>, a passionate Computer Science student and
-            aspiring Full-Stack Developer based in Cuenca, Batangas. I love crafting clean,
-            modern web apps and exploring machine learning solutions that solve real-world problems.
-          </motion.p>
-          <motion.p className="about-me-bio" {...fadeUp(0.44)}>
-            With hands-on experience in React, Firebase, Supabase, and Python, I've built
-            everything from franchise tracking platforms to AI-powered admission systems. I'm
-            driven by clean code, meaningful UI/UX, and the endless possibilities technology offers.
-          </motion.p>
-
-          {/* Highlights grid */}
-          <motion.div className="about-me-highlights" {...fadeUp(0.52)}>
-            {highlights.map((h, i) => (
-              <motion.div
-                key={h.label}
-                className="about-me-highlight"
-                initial={{ opacity: 0, y: 22 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.54 + i * 0.08 }}
-                whileHover={{ y: -5, scale: 1.03 }}
-              >
-                <span className="about-me-highlight-icon">
-                  <i className={h.icon} />
+        <div className="about__grid">
+          <Reveal className="about__visual">
+            <div className="about__photo">
+              <img src="/images/aboutP.jpg" alt="Patrick Eva" />
+              <div className="about__photo-tag">
+                <span>
+                  <strong>Patrick Eva</strong>
+                  <small>Cuenca, Batangas</small>
                 </span>
-                <div className="about-me-highlight-text">
-                  <span className="about-me-highlight-label">{h.label}</span>
-                  <span className="about-me-highlight-value">{h.value}</span>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                <span className="about__views" title="Portfolio views">
+                  <i className="bx bx-show" />
+                  {views !== null ? views.toLocaleString() : "—"}
+                  <small>{views === 1 ? "view" : "views"}</small>
+                </span>
+              </div>
+            </div>
 
-        </motion.div>
+            <div className="about__stats">
+              {stats.map((s, i) => (
+                <Spotlight
+                  key={s.label}
+                  className="stat"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.6, ease, delay: 0.1 + i * 0.08 }}
+                >
+                  <span className="stat__value gradient-text">
+                    <CountUp value={s.value} />
+                  </span>
+                  <span className="stat__label">{s.label}</span>
+                </Spotlight>
+              ))}
+            </div>
+          </Reveal>
 
+          <div className="about__content">
+            <Reveal className="subhead" y={12}>
+              <i className="bx bx-user" /> Who I Am
+            </Reveal>
+
+            <Reveal as="p" className="about__lead" delay={0.05}>
+              Hi! I'm <strong>Patrick Eva</strong>, a passionate Computer Science student and
+              aspiring Full-Stack Developer based in Cuenca, Batangas. I love crafting clean,
+              modern web apps and exploring machine learning solutions that solve real-world problems.
+            </Reveal>
+
+            <Reveal as="p" className="about__bio" delay={0.1}>
+              With hands-on experience in React, Firebase, Supabase, and Python, I've built
+              everything from franchise tracking platforms to AI-powered admission systems. I'm
+              driven by clean code, meaningful UI/UX, and the endless possibilities technology offers.
+            </Reveal>
+
+            <div className="about__highlights">
+              {highlights.map((h, i) => (
+                <Spotlight
+                  key={h.label}
+                  className="highlight"
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.6, ease, delay: 0.15 + i * 0.08 }}
+                >
+                  <span className="icon-tile">
+                    <i className={h.icon} />
+                  </span>
+                  <span className="highlight__text">
+                    <span className="highlight__label">{h.label}</span>
+                    <span className="highlight__value">{h.value}</span>
+                  </span>
+                </Spotlight>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="about__extra">
+          <div>
+            <Reveal className="subhead" y={12}>
+              <i className="bx bx-heart" /> Hobbies &amp; Interests
+            </Reveal>
+            <div className="hobbies">
+              {hobbies.map((h, i) => (
+                <motion.span
+                  key={h.label}
+                  className="hobby"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.5, ease, delay: i * 0.06 }}
+                >
+                  {h.ReactIcon ? <h.ReactIcon /> : <i className={h.icon} />}
+                  {h.label}
+                </motion.span>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Reveal className="subhead" y={12}>
+              <i className="bx bx-images" /> Gallery
+            </Reveal>
+            <Reveal>
+              <Marquee speed={0.4} className="gallery">
+                {photos.map((p) => (
+                  <GalleryItem key={p.src} photo={p} />
+                ))}
+              </Marquee>
+            </Reveal>
+          </div>
+        </div>
       </div>
-
-      {/* ── HOBBIES + PHOTOS ── */}
-      <motion.div
-        className="about-me-extra"
-        initial={{ opacity: 0, y: 36 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={vp}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-      >
-        {/* Hobbies */}
-        <div className="about-me-hobbies-block">
-          <p className="about-me-section-eyebrow">
-            <i className="bx bx-heart" /> Hobbies &amp; Interests
-          </p>
-          <div className="about-me-hobbies">
-            {hobbies.map((h, i) => (
-              <motion.div
-                key={h.label}
-                className="about-me-hobby"
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={vp}
-                transition={{ duration: 0.4, delay: 0.05 + i * 0.07 }}
-                whileHover={{ y: -5, scale: 1.06 }}
-              >
-                {h.ReactIcon
-                  ? <h.ReactIcon className="about-me-hobby-react-icon" />
-                  : <i className={h.icon} />}
-                <span>{h.label}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Photo gallery */}
-        <div className="about-me-photos-block">
-          <p className="about-me-section-eyebrow">
-            <i className="bx bx-images" /> Gallery
-          </p>
-          <div className="gallery-marquee-wrapper">
-            <div className="gallery-marquee-fade gallery-marquee-fade--left" />
-            <GalleryMarquee photos={photos} />
-            <div className="gallery-marquee-fade gallery-marquee-fade--right" />
-          </div>
-        </div>
-      </motion.div>
-
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Reveal, SectionHeading, Spotlight, ease } from './ui';
 
 const schools = [
   {
@@ -36,98 +37,91 @@ export default function Education() {
   const active = schools[activeIdx];
 
   return (
-    <section className="education site-section" id="education">
-      <motion.h2
-        className="heading"
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        My <span>Education</span>
-      </motion.h2>
+    <section className="section education" id="education">
+      <div className="container">
+        <SectionHeading index="04" eyebrow="Background" title="My" accent="Education" />
 
-      <div className="edu-layout">
-
-        {/* ── Left: vertical timeline ── */}
-        <motion.div
-          className="edu-timeline"
-          initial={{ opacity: 0, x: -36 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        >
-          {schools.map((s, i) => (
-            <motion.div
-              key={i}
-              className={`edu-node${activeIdx === i ? ' edu-node--active' : ''}`}
-              onClick={() => setActiveIdx(i)}
-              onMouseEnter={() => setActiveIdx(i)}
-              initial={{ opacity: 0, x: -22 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="edu-node__track">
-                <div className="edu-node__dot">
+        <div className="edu__grid">
+          <div className="edu__timeline">
+            {schools.map((s, i) => (
+              <Spotlight
+                key={s.name}
+                role="button"
+                tabIndex={0}
+                aria-pressed={activeIdx === i}
+                className={`edu-item${activeIdx === i ? ' is-active' : ''}`}
+                onClick={() => setActiveIdx(i)}
+                onMouseEnter={() => setActiveIdx(i)}
+                onFocus={() => setActiveIdx(i)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveIdx(i);
+                  }
+                }}
+                initial={{ opacity: 0, x: -28 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.7, ease, delay: i * 0.1 }}
+              >
+                {activeIdx === i && (
+                  <motion.span
+                    layoutId="edu-indicator"
+                    className="edu-item__bar"
+                    transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+                  />
+                )}
+                <span className="icon-tile edu-item__icon">
                   <i className={`bx ${s.icon}`} />
+                </span>
+                <div className="edu-item__body">
+                  <span className="edu-item__type">{s.type}</span>
+                  <h3 className="edu-item__name">{s.name}</h3>
+                  <p className="edu-item__degree">{s.degree}</p>
+                  <div className="edu-item__meta">
+                    <span><i className="bx bx-calendar" /> {s.year}</span>
+                    <span><i className="bx bx-map-pin" /> {s.location}</span>
+                  </div>
                 </div>
-                {i < schools.length - 1 && <div className="edu-node__line" />}
-              </div>
-
-              <div className="edu-node__body">
-                <span className="edu-node__type">{s.type}</span>
-                <h3 className="edu-node__name">{s.name}</h3>
-                <p className="edu-node__degree">{s.degree}</p>
-                <div className="edu-node__meta">
-                  <span><i className="bx bx-calendar" /> {s.year}</span>
-                  <span><i className="bx bx-map-pin" /> {s.location}</span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* ── Right: image viewer (no text overlay) ── */}
-        <motion.div
-          className="edu-showcase"
-          initial={{ opacity: 0, x: 36 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        >
-          <div className="edu-showcase__frame">
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={activeIdx}
-                src={active.img}
-                alt={active.name}
-                className="edu-showcase__img"
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.03 }}
-                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              />
-            </AnimatePresence>
+              </Spotlight>
+            ))}
           </div>
 
-          {/* School name label below the frame */}
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={activeIdx}
-              className="edu-showcase__label"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <i className={`bx ${active.icon}`} />
-              {active.name}
-            </motion.p>
-          </AnimatePresence>
-        </motion.div>
+          <Reveal className="edu__showcase" delay={0.15}>
+            <div className="edu__frame">
+              <AnimatePresence initial={false}>
+                <motion.img
+                  key={activeIdx}
+                  src={active.img}
+                  alt={active.name}
+                  initial={{ opacity: 0, scale: 1.08 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.7, ease }}
+                />
+              </AnimatePresence>
 
+              <div className="edu__caption">
+                <span className="edu__caption-icon">
+                  <i className={`bx ${active.icon}`} />
+                </span>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={activeIdx}
+                    className="edu__caption-text"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3, ease }}
+                  >
+                    <strong>{active.name}</strong>
+                    <small>{active.year}</small>
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

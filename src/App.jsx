@@ -1,75 +1,128 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, MotionConfig, motion, animate, useScroll, useSpring } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import About from './components/About'
 import Skills from './components/Skills'
 import Experience from './components/Experience'
-import Projects from './components/Education'
+import Education from './components/Education'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
-import './App.css'
 
-const PARTICLE_COUNT = 12
-function Particles() {
+const SECTION_IDS = ['home', 'about', 'skills', 'services', 'education', 'contact']
+const INTRO_KEY = 'intro-seen'
+
+function hasSeenIntro() {
+  try {
+    return sessionStorage.getItem(INTRO_KEY) === '1'
+  } catch {
+    return true
+  }
+}
+
+function Preloader({ onDone }) {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    const controls = animate(0, 100, {
+      duration: 1.5,
+      ease: [0.65, 0, 0.35, 1],
+      onUpdate: v => setCount(Math.round(v)),
+      onComplete: () => setTimeout(onDone, 200),
+    })
+    return () => controls.stop()
+  }, [onDone])
+
   return (
-    <div className="particles-wrap" aria-hidden="true">
-      {Array.from({ length: PARTICLE_COUNT }).map((_, i) => (
-        <div key={i} className="particle" />
-      ))}
-    </div>
+    <motion.div
+      className="preloader"
+      exit={{ y: '-100%', transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] } }}
+    >
+      <div className="preloader__inner">
+        <div className="preloader__name" aria-label="Patrick Eva">
+          {'Patrick Eva'.split('').map((ch, i) => (
+            <span className="char-mask" key={i}>
+              <motion.span
+                className="char"
+                initial={{ y: '110%' }}
+                animate={{ y: '0%' }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 + i * 0.035 }}
+              >
+                {ch === ' ' ? ' ' : ch}
+              </motion.span>
+            </span>
+          ))}
+        </div>
+        <div className="preloader__bar">
+          <span style={{ transform: `scaleX(${count / 100})` }} />
+        </div>
+        <span className="preloader__count">{String(count).padStart(3, '0')}</span>
+      </div>
+    </motion.div>
   )
 }
 
-const SECTIONS = [
-  { id: 'home',      Component: Home },
-  { id: 'about',     Component: About },
-  { id: 'skills',    Component: Skills },
-  { id: 'services',  Component: Experience },
-  { id: 'education', Component: Projects },
-  { id: 'contact',   Component: Contact },
-]
-
-const sectionIn = {
-  hidden:  { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll()
+  const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 30, restDelta: 0.001 })
+  return <motion.div className="scroll-progress" style={{ scaleX }} aria-hidden="true" />
 }
 
-function App() {
-  const [activeSection, setActiveSection] = useState('home')
-  const mouseGlowRef = useRef(null)
+function Backdrop() {
+  const glowRef = useRef(null)
 
-  /* Cursor glow */
   useEffect(() => {
-    const el = mouseGlowRef.current
+    const el = glowRef.current
     if (!el) return
+    let frame = 0
     const onMove = e => {
-      el.style.left = e.clientX + 'px'
-      el.style.top  = e.clientY + 'px'
-      el.classList.add('mouse-glow--visible')
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        el.style.transform = `translate(${e.clientX - 300}px, ${e.clientY - 300}px)`
+        el.style.opacity = '1'
+      })
     }
-    const onLeave = () => el.classList.remove('mouse-glow--visible')
+    const onLeave = () => { el.style.opacity = '0' }
     window.addEventListener('mousemove', onMove)
     document.documentElement.addEventListener('mouseleave', onLeave)
     return () => {
+      cancelAnimationFrame(frame)
       window.removeEventListener('mousemove', onMove)
       document.documentElement.removeEventListener('mouseleave', onLeave)
     }
   }, [])
 
-  /* Track active section for navbar highlight */
+  return (
+    <div className="backdrop" aria-hidden="true">
+      <div className="backdrop__grid" />
+      <div className="backdrop__blob backdrop__blob--1" />
+      <div className="backdrop__blob backdrop__blob--2" />
+      <div ref={glowRef} className="backdrop__cursor" />
+    </div>
+  )
+}
+
+function App() {
+  const [loading, setLoading] = useState(() => !hasSeenIntro())
+  const [activeSection, setActiveSection] = useState('home')
+
+  const finishIntro = useCallback(() => {
+    try { sessionStorage.setItem(INTRO_KEY, '1') } catch { /* private mode */ }
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    document.body.style.overflow = loading ? 'hidden' : ''
+  }, [loading])
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id) })
       },
-      { threshold: 0.3, rootMargin: '-80px 0px -35% 0px' }
+      { rootMargin: '-45% 0px -50% 0px' }
     )
-    SECTIONS.forEach(({ id }) => {
+    SECTION_IDS.forEach(id => {
       const el = document.getElementById(id)
       if (el) observer.observe(el)
     })
@@ -77,36 +130,31 @@ function App() {
   }, [])
 
   const navigateTo = useCallback(sectionId => {
-    const el = document.getElementById(sectionId)
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [])
 
   return (
-    <div className="app-wrapper">
-      <div ref={mouseGlowRef} className="mouse-glow" aria-hidden="true" />
-      <Particles />
-      <div className="animated-bg" aria-hidden="true" />
+    <MotionConfig reducedMotion="user">
+      <AnimatePresence>
+        {loading && <Preloader key="preloader" onDone={finishIntro} />}
+      </AnimatePresence>
 
-      <div className="app-content">
-        <Navbar activeSection={activeSection} navigateTo={navigateTo} />
+      <ScrollProgress />
+      <Backdrop />
 
-        <main>
-          {SECTIONS.map(({ id, Component }) => (
-            <motion.div
-              key={id}
-              className="section-reveal"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.07 }}
-              variants={sectionIn}
-            >
-              <Component />
-            </motion.div>
-          ))}
-          <Footer />
-        </main>
-      </div>
-    </div>
+      <Navbar activeSection={activeSection} navigateTo={navigateTo} />
+
+      <main>
+        <Home ready={!loading} navigateTo={navigateTo} />
+        <About />
+        <Skills />
+        <Experience />
+        <Education />
+        <Contact />
+      </main>
+
+      <Footer navigateTo={navigateTo} />
+    </MotionConfig>
   )
 }
 

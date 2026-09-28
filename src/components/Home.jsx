@@ -1,106 +1,252 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Magnetic, ease } from "./ui";
 
-const ease = [0.22, 1, 0.36, 1];
-const vp   = { once: true, margin: "-60px" };
-
-const fadeUp   = (delay = 0) => ({ initial: { opacity: 0, y: 32 },  whileInView: { opacity: 1, y: 0 },  viewport: vp, transition: { duration: 0.65, ease, delay } });
-const fadeLeft = (delay = 0) => ({ initial: { opacity: 0, x: -44 }, whileInView: { opacity: 1, x: 0 },  viewport: vp, transition: { duration: 0.7,  ease, delay } });
-const fadeRight= (delay = 0) => ({ initial: { opacity: 0, x: 44 },  whileInView: { opacity: 1, x: 0 },  viewport: vp, transition: { duration: 0.7,  ease, delay } });
+const EMAIL = "patrickramoseva@gmail.com";
 
 const details = [
-  { icon: "bx bx-code-alt",  text: "Web Developer  ·  Software Engineer" },
-  { icon: "bx bx-envelope",  text: "patrickramoseva@gmail.com" },
-  { icon: "bx bx-map",       text: "Cuenca, Batangas" },
+  { icon: "bx bx-code-alt", text: "Web Developer · Software Engineer" },
+  { icon: "bx bx-envelope", text: EMAIL },
+  { icon: "bx bx-map",      text: "Cuenca, Batangas" },
 ];
 
-export default function Home() {
-  const [copied, setCopied] = useState(false);
+const roles = ["web applications", "full-stack systems", "machine learning solutions"];
 
-  const handleContactClick = async (e) => {
-    e.preventDefault();
-    const email = "patrickramoseva@gmail.com";
-    try {
-      await navigator.clipboard.writeText(email);
-    } catch {
-      const el = document.createElement("textarea");
-      el.value = email;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-    }
+const content = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease } },
+};
+
+const nameLine = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.035 } },
+};
+
+const char = {
+  hidden: { y: "110%" },
+  show: { y: "0%", transition: { duration: 1, ease } },
+};
+
+function SplitChars({ text }) {
+  return text.split("").map((c, i) => (
+    <span className="char-mask" key={i}>
+      <motion.span className="char" variants={char}>
+        {c}
+      </motion.span>
+    </span>
+  ));
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const el = document.createElement("textarea");
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+  }
+}
+
+export default function Home({ ready, navigateTo }) {
+  const [copied, setCopied] = useState(false);
+  const [roleIdx, setRoleIdx] = useState(0);
+
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [10, -10]), { stiffness: 150, damping: 18 });
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-10, 10]), { stiffness: 150, damping: 18 });
+
+  useEffect(() => {
+    const t = setInterval(() => setRoleIdx((i) => (i + 1) % roles.length), 2800);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    if (!copied) return;
+    const t = setTimeout(() => setCopied(false), 2500);
+    return () => clearTimeout(t);
+  }, [copied]);
+
+  const handleContactClick = async () => {
+    await copyToClipboard(EMAIL);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
   };
 
+  const handleTilt = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  };
+
+  const resetTilt = () => {
+    mx.set(0);
+    my.set(0);
+  };
+
+  const state = ready ? "show" : "hidden";
+
   return (
-    <section className="home site-section" id="home">
+    <section className="hero" id="home">
+      <div className="container hero__grid">
+        <motion.div className="hero__content" variants={content} initial="hidden" animate={state}>
+          <motion.span className="hero__badge" variants={item}>
+            <span className="hero__badge-dot" />
+            Hello, I'm
+          </motion.span>
 
-      {/* ── LEFT: text content ── */}
-      <motion.div className="home-content" {...fadeLeft(0.08)}>
+          <h1 className="hero__name" aria-label="Patrick Eva">
+            <motion.span className="hero__name-line" variants={nameLine} aria-hidden="true">
+              <SplitChars text="Patrick" />
+            </motion.span>
+            <span className="hero__name-line" aria-hidden="true">
+              <span className="char-mask">
+                <motion.span className="char gradient-text" variants={char}>
+                  Eva
+                </motion.span>
+              </span>
+            </span>
+          </h1>
 
-        {/* Name */}
-        <motion.h1 {...fadeUp(0.18)}>PATRICK EVA</motion.h1>
+          <motion.p className="hero__role" variants={item}>
+            I build
+            <span className="hero__rotator">
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.span
+                  key={roleIdx}
+                  className="gradient-text"
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: "0%", opacity: 1 }}
+                  exit={{ y: "-100%", opacity: 0 }}
+                  transition={{ duration: 0.6, ease }}
+                >
+                  {roles[roleIdx]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </motion.p>
 
-        {/* Degree */}
-        <motion.p className="home-degree" {...fadeUp(0.28)}>
-          Bachelor of Science in Computer Science
-        </motion.p>
+          <motion.p className="hero__degree" variants={item}>
+            <i className="bx bxs-graduation" />
+            Bachelor of Science in Computer Science
+          </motion.p>
 
-        {/* Detail list */}
-        <motion.ul className="home-details" {...fadeUp(0.38)}>
-          {details.map((d, i) => (
-            <motion.li
-              key={i}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.45, delay: 0.4 + i * 0.08 }}
-            >
-              <span className="home-details-icon"><i className={d.icon} /></span>
-              <span>{d.text}</span>
-            </motion.li>
-          ))}
-        </motion.ul>
+          <motion.ul className="hero__details" variants={item}>
+            {details.map((d) => (
+              <li key={d.text}>
+                <i className={d.icon} />
+                <span>{d.text}</span>
+              </li>
+            ))}
+          </motion.ul>
 
-        {/* CTA buttons */}
-        <motion.div className="home-buttons" {...fadeUp(0.58)}>
-          <motion.a
-            href="/cv/Eva_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn--primary"
-            whileHover={{ scale: 1.04, y: -3 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <i className="bx bx-file" />
-            View Resume
-          </motion.a>
+          <motion.div className="hero__actions" variants={item}>
+            <Magnetic>
+              <a
+                href="/cv/Eva_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn--primary btn--lg"
+              >
+                <i className="bx bx-file" />
+                View Resume
+              </a>
+            </Magnetic>
 
-          <motion.button
-            className={`btn btn--outline home-contact-btn${copied ? " home-contact-btn--copied" : ""}`}
-            onClick={handleContactClick}
-            whileHover={{ scale: 1.04, y: -3 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            {copied
-              ? <><i className="bx bx-check" /> Copied!</>
-              : <><i className="bx bx-envelope" /> Contact Me</>}
-          </motion.button>
+            <Magnetic>
+              <button
+                type="button"
+                className={`btn btn--ghost btn--lg${copied ? " is-success" : ""}`}
+                onClick={handleContactClick}
+              >
+                {copied ? (
+                  <><i className="bx bx-check" /> Copied!</>
+                ) : (
+                  <><i className="bx bx-envelope" /> Contact Me</>
+                )}
+              </button>
+            </Magnetic>
+          </motion.div>
         </motion.div>
 
-        {/* Toast */}
-        <div className={`home-copy-toast${copied ? " home-copy-toast--show" : ""}`}>
-          <i className="bx bx-check-circle" />
-          patrickramoseva@gmail.com copied!
-        </div>
-      </motion.div>
+        <motion.div
+          className="hero__visual"
+          onMouseMove={handleTilt}
+          onMouseLeave={resetTilt}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+          transition={{ duration: 1.2, ease, delay: 0.35 }}
+        >
+          <motion.div className="hero__portrait" style={{ rotateX, rotateY }}>
+            <div className="hero__portrait-glow" />
+            <motion.div
+              className="hero__portrait-back"
+              initial={{ rotate: 0, x: 0, y: 0, opacity: 0 }}
+              animate={ready ? { rotate: 6, x: 22, y: 12, opacity: 1 } : {}}
+              transition={{ duration: 1.2, ease, delay: 0.7 }}
+            />
+            <div className="hero__portrait-dots hero__portrait-dots--tr" />
+            <div className="hero__portrait-dots hero__portrait-dots--bl" />
+            <div className="hero__portrait-ring" />
+            <div className="hero__portrait-frame">
+              <img src="/images/pp.jpg" alt="Patrick Eva" />
+              <motion.div
+                className="hero__portrait-caption"
+                initial={{ opacity: 0, y: 16 }}
+                animate={ready ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, ease, delay: 1.1 }}
+              >
+                <span>
+                  <strong>Patrick Eva</strong>
+                  <small>
+                    <span className="hero__portrait-status" />
+                    Cuenca, Batangas
+                  </small>
+                </span>
+                <span className="hero__portrait-caption-icon">
+                  <i className="bx bx-code-alt" />
+                </span>
+              </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
 
-      {/* ── RIGHT: profile image ── */}
-      <motion.div className="about-img" {...fadeRight(0.22)}>
-        <img src="/images/pp.jpg" alt="Patrick Eva" />
-      </motion.div>
+      <motion.button
+        type="button"
+        className="hero__scroll"
+        onClick={() => navigateTo("about")}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: ready ? 1 : 0 }}
+        transition={{ duration: 0.8, delay: 1.4 }}
+        aria-label="Scroll to About section"
+      >
+        <span className="hero__mouse" />
+        Scroll
+      </motion.button>
 
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            className="toast"
+            role="status"
+            initial={{ opacity: 0, y: 20, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: 20, x: "-50%" }}
+            transition={{ duration: 0.35, ease }}
+          >
+            <i className="bx bx-check-circle" />
+            {EMAIL} copied!
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
