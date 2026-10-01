@@ -3,11 +3,12 @@ import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from
 import { Magnetic, ease } from "./ui";
 
 const EMAIL = "patrickramoseva@gmail.com";
+const SUBJECT = "Hello Patrick — let's connect";
+const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`;
+const GMAIL_COMPOSE = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=${encodeURIComponent(SUBJECT)}`;
 
 const details = [
   { icon: "bx bx-code-alt", text: "Web Developer · Software Engineer" },
-  { icon: "bx bx-envelope", text: EMAIL },
-  { icon: "bx bx-map",      text: "Cuenca, Batangas" },
 ];
 
 const roles = ["web applications", "full-stack systems", "machine learning solutions"];
@@ -42,21 +43,7 @@ function SplitChars({ text }) {
   ));
 }
 
-async function copyToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    const el = document.createElement("textarea");
-    el.value = text;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand("copy");
-    document.body.removeChild(el);
-  }
-}
-
 export default function Home({ ready, navigateTo }) {
-  const [copied, setCopied] = useState(false);
   const [roleIdx, setRoleIdx] = useState(0);
 
   const mx = useMotionValue(0);
@@ -69,15 +56,12 @@ export default function Home({ ready, navigateTo }) {
     return () => clearInterval(t);
   }, []);
 
-  useEffect(() => {
-    if (!copied) return;
-    const t = setTimeout(() => setCopied(false), 2500);
-    return () => clearTimeout(t);
-  }, [copied]);
-
-  const handleContactClick = async () => {
-    await copyToClipboard(EMAIL);
-    setCopied(true);
+  // Desktops rarely have a mail app wired to mailto:, so open Gmail's composer there instead.
+  const handleContactClick = (e) => {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      e.preventDefault();
+      window.open(GMAIL_COMPOSE, "_blank", "noopener,noreferrer");
+    }
   };
 
   const handleTilt = (e) => {
@@ -97,10 +81,6 @@ export default function Home({ ready, navigateTo }) {
     <section className="hero" id="home">
       <div className="container hero__grid">
         <motion.div className="hero__content" variants={content} initial="hidden" animate={state}>
-          <motion.span className="hero__badge" variants={item}>
-            <span className="hero__badge-dot" />
-            Hello, I'm
-          </motion.span>
 
           <h1 className="hero__name" aria-label="Patrick Eva">
             <motion.span className="hero__name-line" variants={nameLine} aria-hidden="true">
@@ -161,17 +141,9 @@ export default function Home({ ready, navigateTo }) {
             </Magnetic>
 
             <Magnetic>
-              <button
-                type="button"
-                className={`btn btn--ghost btn--lg${copied ? " is-success" : ""}`}
-                onClick={handleContactClick}
-              >
-                {copied ? (
-                  <><i className="bx bx-check" /> Copied!</>
-                ) : (
-                  <><i className="bx bx-envelope" /> Contact Me</>
-                )}
-              </button>
+              <a href={MAILTO} className="btn btn--ghost btn--lg" onClick={handleContactClick}>
+                <i className="bx bx-envelope" /> Contact Me
+              </a>
             </Magnetic>
           </motion.div>
         </motion.div>
@@ -232,21 +204,6 @@ export default function Home({ ready, navigateTo }) {
         Scroll
       </motion.button>
 
-      <AnimatePresence>
-        {copied && (
-          <motion.div
-            className="toast"
-            role="status"
-            initial={{ opacity: 0, y: 20, x: "-50%" }}
-            animate={{ opacity: 1, y: 0, x: "-50%" }}
-            exit={{ opacity: 0, y: 20, x: "-50%" }}
-            transition={{ duration: 0.35, ease }}
-          >
-            <i className="bx bx-check-circle" />
-            {EMAIL} copied!
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

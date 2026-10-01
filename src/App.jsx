@@ -153,7 +153,7 @@ function App() {
         <Contact />
       </main>
 
-      <Footer navigateTo={navigateTo} />
+      <Footer />
     </MotionConfig>
   )
 }

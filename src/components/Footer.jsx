@@ -2,16 +2,17 @@ const socials = [
   { label: 'GitHub',   icon: 'bxl-github',          url: 'https://github.com/patrickeva' },
   { label: 'LinkedIn', icon: 'bxl-linkedin-square', url: 'https://www.linkedin.com/in/patrickeva/' },
   { label: 'Facebook', icon: 'bxl-facebook-square', url: 'https://www.facebook.com/ptrkrmseva' },
+  { label: 'Email patrickramoseva@gmail.com', icon: 'bx-envelope', url: 'mailto:patrickramoseva@gmail.com' },
 ];
 
-export default function Footer({ navigateTo }) {
+export default function Footer() {
   return (
     <footer className="footer">
       <div className="container footer__inner">
         <div className="footer__brand">
           
           <p>
-            © {new Date().getFullYear()} · Made by <strong>Patrick Eva</strong>
+            © {new Date().getFullYear()} · <strong>Patrick Eva</strong>
           </p>
         </div>
 
@@ -20,22 +21,14 @@ export default function Footer({ navigateTo }) {
             <a
               key={s.label}
               href={s.url}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(s.url.startsWith('mailto:') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
               className="icon-btn"
               aria-label={s.label}
+              title={s.label}
             >
               <i className={`bx ${s.icon}`} />
             </a>
           ))}
-          <button
-            type="button"
-            className="icon-btn footer__top"
-            onClick={() => navigateTo('home')}
-            aria-label="Back to top"
-          >
-            <i className="bx bx-up-arrow-alt" />
-          </button>
         </div>
       </div>
     </footer>

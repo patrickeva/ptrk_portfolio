@@ -11,7 +11,7 @@ const projects = [
       "A real-time GPS fleet tracking system built for a transport cooperative operating the SM Lemery–SM Lipa route. Passengers follow live minibus locations on a public map with no app or sign-up required, while drivers use a native Android app that keeps transmitting even when the phone is closed or the screen is off.",
     tags: ["React", "Supabase", "PostgreSQL", "Capacitor", "Java", "Leaflet"],
     link: "https://github.com/patrickeva/minibus-tracker",
-    liveLink: "https://minibus-tracker.pages.dev/",
+    liveLink: "https://bmtctracker.com",
   },
   {
     image: "/images/franchiseBG.png",

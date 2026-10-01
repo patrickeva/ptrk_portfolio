@@ -7,7 +7,7 @@ import { CountUp, Marquee, Reveal, SectionHeading, Spotlight, ease } from "./ui"
 const highlights = [
   { icon: "bx bx-code-alt",     label: "Web Developer", value: "Front-end & Full-stack" },
   { icon: "bx bx-brain",        label: "ML Engineer",   value: "Deep Learning & AI" },
-  { icon: "bx bxs-graduation",  label: "CS Student",    value: "NU Lipa · 2022–2026" },
+  { icon: "bx bxs-graduation",  label: "CS Graduate",   value: "NU Lipa · 2022–2026" },
   { icon: "bx bx-map-pin",      label: "Location",      value: "Cuenca, Batangas" },
 ];
 
@@ -101,8 +101,8 @@ export default function About() {
             </Reveal>
 
             <Reveal as="p" className="about__lead" delay={0.05}>
-              Hi! I'm <strong>Patrick Eva</strong>, a passionate Computer Science student and
-              aspiring Full-Stack Developer based in Cuenca, Batangas. I love crafting clean,
+              Hi! I'm <strong>Patrick Eva</strong>, a passionate Computer Science graduate and
+              Full-Stack Developer based in Cuenca, Batangas. I love crafting clean,
               modern web apps and exploring machine learning solutions that solve real-world problems.
             </Reveal>
 
