@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { AnimatePresence, MotionConfig, motion, animate, useScroll, useSpring } from 'framer-motion'
+import { MotionConfig, motion, useScroll, useSpring } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import About from './components/About'
@@ -10,58 +10,6 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 
 const SECTION_IDS = ['home', 'about', 'services', 'projects', 'skills', 'contact']
-const INTRO_KEY = 'intro-seen'
-
-function hasSeenIntro() {
-  try {
-    return sessionStorage.getItem(INTRO_KEY) === '1'
-  } catch {
-    return true
-  }
-}
-
-function Preloader({ onDone }) {
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    const controls = animate(0, 100, {
-      duration: 1.5,
-      ease: [0.65, 0, 0.35, 1],
-      onUpdate: v => setCount(Math.round(v)),
-      onComplete: () => setTimeout(onDone, 200),
-    })
-    return () => controls.stop()
-  }, [onDone])
-
-  return (
-    <motion.div
-      className="preloader"
-      exit={{ y: '-100%', transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] } }}
-    >
-      <div className="preloader__inner">
-        <div className="preloader__name" aria-label="Patrick Eva">
-          {'Patrick Eva'.split('').map((ch, i) => (
-            <span className="char-mask" key={i}>
-              <motion.span
-                className="char"
-                initial={{ y: '110%' }}
-                animate={{ y: '0%' }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 + i * 0.035 }}
-              >
-                {ch === ' ' ? ' ' : ch}
-              </motion.span>
-            </span>
-          ))}
-        </div>
-        <div className="preloader__bar">
-          <span style={{ transform: `scaleX(${count / 100})` }} />
-        </div>
-        <span className="preloader__count">{String(count).padStart(3, '0')}</span>
-      </div>
-    </motion.div>
-  )
-}
-
 function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 30, restDelta: 0.001 })
@@ -103,17 +51,7 @@ function Backdrop() {
 }
 
 function App() {
-  const [loading, setLoading] = useState(() => !hasSeenIntro())
   const [activeSection, setActiveSection] = useState('home')
-
-  const finishIntro = useCallback(() => {
-    try { sessionStorage.setItem(INTRO_KEY, '1') } catch { /* private mode */ }
-    setLoading(false)
-  }, [])
-
-  useEffect(() => {
-    document.body.style.overflow = loading ? 'hidden' : ''
-  }, [loading])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -135,17 +73,13 @@ function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <AnimatePresence>
-        {loading && <Preloader key="preloader" onDone={finishIntro} />}
-      </AnimatePresence>
-
       <ScrollProgress />
       <Backdrop />
 
       <Navbar activeSection={activeSection} navigateTo={navigateTo} />
 
       <main>
-        <Home ready={!loading} navigateTo={navigateTo} />
+        <Home ready navigateTo={navigateTo} />
         <About />
         <Services />
         <Experience />

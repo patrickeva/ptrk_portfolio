@@ -184,7 +184,7 @@ section[id] {
 }
 
 /* ============================================================
-   BACKDROP, PROGRESS, PRELOADER
+   BACKDROP, PROGRESS
 ============================================================ */
 .backdrop {
   position: fixed;
@@ -260,53 +260,11 @@ section[id] {
   transform-origin: 0 50%;
 }
 
-.preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 300;
-  display: grid;
-  place-items: center;
-  background: var(--bg);
-}
 
-.preloader__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 22px;
-}
 
-.preloader__name {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 7vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
 
-.preloader__bar {
-  position: relative;
-  width: 200px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--border);
-  overflow: hidden;
-}
 
-.preloader__bar span {
-  position: absolute;
-  inset: 0;
-  background: var(--grad);
-  transform-origin: left;
-}
 
-.preloader__count {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  letter-spacing: 0.2em;
-  color: var(--text-dim);
-  font-variant-numeric: tabular-nums;
-}
 
 /* ============================================================
    BUTTONS & SHARED PIECES
