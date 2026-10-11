@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { ease } from './ui';
+import Icon from './Icon';
 
 const links = [
   { id: 'home',      label: 'Home' },
   { id: 'about',     label: 'About' },
+  { id: 'services',  label: 'Services' },
+  { id: 'projects',  label: 'Work' },
   { id: 'skills',    label: 'Skills' },
-  { id: 'services',  label: 'Projects' },
-  { id: 'education', label: 'Education' },
-  { id: 'contact',   label: 'Socials' },
+  { id: 'contact',   label: 'Contact' },
 ];
 
 export default function Navbar({ activeSection, navigateTo }) {
@@ -90,16 +91,26 @@ export default function Navbar({ activeSection, navigateTo }) {
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             <AnimatePresence mode="wait" initial={false}>
-              <motion.i
+              <motion.span
                 key={isDark ? 'sun' : 'moon'}
-                className={`bx ${isDark ? 'bx-sun' : 'bx-moon'}`}
+                className="nav__theme-icon"
                 initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
                 animate={{ rotate: 0, scale: 1, opacity: 1 }}
                 exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
                 transition={{ duration: 0.25 }}
-              />
+              >
+                <Icon name={isDark ? 'sun' : 'moon'} />
+              </motion.span>
             </AnimatePresence>
           </button>
+
+          <a
+            href="#services"
+            className="btn btn--primary btn--sm nav__cta"
+            onClick={(e) => handleNav(e, 'services')}
+          >
+            Hire Me
+          </a>
 
           <button
             type="button"
@@ -108,7 +119,7 @@ export default function Navbar({ activeSection, navigateTo }) {
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >
-            <i className={`bx ${menuOpen ? 'bx-x' : 'bx-menu'}`} />
+            <Icon name={menuOpen ? 'x' : 'menu'} />
           </button>
         </div>
       </div>
@@ -134,16 +145,15 @@ export default function Navbar({ activeSection, navigateTo }) {
                 transition={{ duration: 0.3, ease, delay: 0.04 * i }}
               >
                 {label}
-                <i className="bx bx-right-arrow-alt" />
+                <Icon name="arrow-right" />
               </motion.a>
             ))}
             <a
-              href="/cv/Eva_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#services"
               className="btn btn--primary nav__mobile-cta"
+              onClick={(e) => handleNav(e, 'services')}
             >
-              <i className="bx bx-file" /> View Resume
+              <Icon name="briefcase" /> Hire Me
             </a>
           </motion.nav>
         )}

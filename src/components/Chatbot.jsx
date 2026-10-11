@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import Icon from "./Icon";
 import "./Chatbot.css";
 
 const GREETING = {
@@ -82,7 +83,7 @@ export default function Chatbot() {
               </div>
             </div>
             <button className="chatbot-close" onClick={() => setOpen(false)} aria-label="Close chat">
-              <i className="bx bx-x" />
+              <Icon name="x" />
             </button>
           </div>
 
@@ -132,7 +133,7 @@ export default function Chatbot() {
               disabled={loading || !input.trim()}
               aria-label="Send message"
             >
-              <i className="bx bx-send" />
+              <Icon name="send" />
             </button>
           </div>
         </div>
@@ -144,7 +145,7 @@ export default function Chatbot() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close chat" : "Open chat"}
       >
-        <i className={`bx ${open ? "bx-x" : "bx-message-dots"}`} />
+        <Icon name={open ? "x" : "message"} />
       </button>
     </>
   );

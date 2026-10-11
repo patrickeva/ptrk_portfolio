@@ -4,6 +4,7 @@ import {
   SiGit, SiPostgresql,
 } from 'react-icons/si';
 import { Marquee, Reveal } from './ui';
+import Icon from './Icon';
 
 const techStack = [
   { name: 'React',        Icon: SiReact,       color: '#61DAFB' },
@@ -36,7 +37,7 @@ export default function TechStack() {
   return (
     <Reveal className="stack">
       <p className="subhead subhead--center">
-        <i className="bx bx-layer" /> Tech Stack
+        <Icon name="layers" /> Tech Stack
       </p>
       <div className="stack__rows">
         {rows.map((row, i) => (

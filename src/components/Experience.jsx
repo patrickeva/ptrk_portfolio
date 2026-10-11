@@ -1,14 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { Reveal, SectionHeading, ease } from "./ui";
+import Icon from "./Icon";
+import Testimonials from "./Testimonials";
 
 const projects = [
   {
     image: "/images/BusTracking.png",
     title: "BMTC Minibus Tracker",
     subtitle: "Fleet Management System · Real-Time GPS Tracking",
-    description:
-      "A real-time GPS fleet tracking system built for a transport cooperative operating the SM Lemery–SM Lipa route. Passengers follow live minibus locations on a public map with no app or sign-up required, while drivers use a native Android app that keeps transmitting even when the phone is closed or the screen is off.",
+    challenge:
+      "Passengers on the SM Lemery–SM Lipa route had no way to know where the minibuses were, leading to long and uncertain waits.",
+    solution:
+      "A public live map that needs no app or sign-up, plus a native Android driver app that keeps sending GPS even with the screen off.",
+    result:
+      "Live at bmtctracker.com — passengers can check bus locations before heading out, and the cooperative can monitor its fleet in real time.",
     tags: ["React", "Supabase", "PostgreSQL", "Capacitor", "Java", "Leaflet"],
     link: "https://github.com/patrickeva/minibus-tracker",
     liveLink: "https://bmtctracker.com",
@@ -17,8 +23,12 @@ const projects = [
     image: "/images/franchiseBG.png",
     title: "Tricycle Franchise Tracker",
     subtitle: "Real-Time Monitoring · Driver Franchises & Licenses",
-    description:
-      "A web-based system for managing the issuance, renewal, and monitoring of tricycle franchises with real-time Firebase sync and admin dashboards.",
+    challenge:
+      "Issuing and renewing tricycle franchises relied on manual records that were hard to search and easy to let expire.",
+    solution:
+      "A web system with real-time sync and admin dashboards for franchises, drivers, and licenses.",
+    result:
+      "Franchise and license status lives in one place, so staff can spot renewals before they lapse.",
     tags: ["React 18", "Firebase", "Supabase", "Tailwind CSS"],
     link: "https://github.com/patrickeva/Tric-Franchise-Tracker",
     liveLink: "https://tric-franchise-tracker.vercel.app/",
@@ -27,8 +37,12 @@ const projects = [
     image: "/images/sbBackground.png",
     title: "Cuenca Legislative Tracker",
     subtitle: "Sangguniang Bayan · Legislative Document System",
-    description:
-      "A centralized digital platform for tracking ordinances and resolutions, featuring secure cloud storage and automated status monitoring to enhance municipal transparency.",
+    challenge:
+      "Ordinances and resolutions were kept on paper, making them slow to find and hard for the public to access.",
+    solution:
+      "A centralized document platform with secure cloud storage and automated status monitoring.",
+    result:
+      "Faster document retrieval for the Sangguniang Bayan and better transparency for residents.",
     tags: ["React", "Firebase", "Supabase", "JavaScript"],
     link: "https://github.com/patrickeva/sb-cuenca-docsys",
     liveLink: "https://sb-cuenca-docsys.vercel.app/",
@@ -37,8 +51,12 @@ const projects = [
     image: "/images/freelanceWEB.png",
     title: "Patrick F Web",
     subtitle: "Freelance Web Development · Business Website",
-    description:
-      "A modern freelance web development website created to showcase professional services, selected projects, pricing, workflow, and web solutions for businesses and individuals.",
+    challenge:
+      "Freelance clients need to quickly understand what services are offered and how to get started.",
+    solution:
+      "A modern business website presenting services, selected projects, pricing, and workflow.",
+    result:
+      "A live online storefront that turns visitors into project inquiries.",
     tags: ["React", "Vite", "JavaScript", "CSS3"],
     link: "https://github.com/patrickeva/patrick-FWeb",
     liveLink: "https://patrick-f-web.vercel.app/",
@@ -47,8 +65,12 @@ const projects = [
     image: "/images/ampalaya.jpg",
     title: "NPK Deficiency Detector",
     subtitle: "Deep Learning · Bitter Gourd Leaf Analysis",
-    description:
-      "A CNN model that distinguishes Healthy, Nitrogen, Phosphorus, and Potassium deficiencies in bitter gourd plants, paired with IoT hardware for field deployment.",
+    challenge:
+      "Farmers can't easily tell which nutrient a bitter gourd plant lacks just by looking at its leaves.",
+    solution:
+      "A CNN model that classifies Healthy, Nitrogen, Phosphorus, and Potassium deficiencies, paired with IoT hardware for field use.",
+    result:
+      "A leaf photo becomes an instant nutrient diagnosis that helps guide fertilizer decisions.",
     tags: ["Deep Learning", "CNN", "IoT", "Python"],
     link: "https://github.com/itzjmbruhhh/NPK_Deficiency_Classifier_IoT",
     liveLink: "https://npknows.vercel.app/",
@@ -57,8 +79,12 @@ const projects = [
     image: "/images/leaf.jpg",
     title: "Leaf it Up to Me",
     subtitle: "Machine Learning · Coffee Leaf Disease Detection",
-    description:
-      "A web application using MobileNetV2 CNN architecture to detect diseases in coffee leaves from uploaded photos with high classification accuracy.",
+    challenge:
+      "Coffee leaf diseases are hard to identify early without an expert on site.",
+    solution:
+      "A MobileNetV2-based web app that classifies diseases from an uploaded leaf photo.",
+    result:
+      "Growers get a quick, accessible first diagnosis from any phone or computer.",
     tags: ["MobileNetV2", "CNN", "Python", "Web App"],
     link: "https://github.com/itzjmbruhhh/coffee_leaf_diseases_classifier",
   },
@@ -66,8 +92,12 @@ const projects = [
     image: "/images/myPortfolio.png",
     title: "Personal Portfolio",
     subtitle: "Frontend · React Portfolio Website",
-    description:
-      "A modern personal portfolio website built to showcase web development projects, technical skills, experience, and professional services through a responsive and interactive interface.",
+    challenge:
+      "Clients need one place to see skills, past work, and services before reaching out.",
+    solution:
+      "An interactive React site with a services catalog, case studies, and an inquiry form.",
+    result:
+      "The site you're on right now.",
     tags: ["React", "Framer Motion", "CSS3", "Vite"],
     link: "https://github.com/patrickeva/ptrk_portfolio",
   },
@@ -75,11 +105,21 @@ const projects = [
     image: "/images/NU_Admission.jpg",
     title: "AI-Powered Admission System",
     subtitle: "NU Lipa · Student Admission with ML Integration",
-    description:
-      "A Django-based admission platform for NU Lipa supporting student registration, admin management, and future TensorFlow ML integration for application processing.",
+    challenge:
+      "Processing student applications involves repetitive manual work for the admissions team.",
+    solution:
+      "A Django platform for student registration and admin management, designed for TensorFlow ML integration.",
+    result:
+      "A digital admission flow ready for ML-assisted application screening.",
     tags: ["Django", "Python", "TensorFlow", "JavaScript"],
     link: "https://github.com/itzjmbruhhh/NU_Admission",
   },
+];
+
+const caseSteps = [
+  { key: "challenge", label: "Challenge", icon: "help" },
+  { key: "solution", label: "Solution", icon: "wrench" },
+  { key: "result", label: "Result", icon: "badge-check" },
 ];
 
 const pad = (n) => String(n).padStart(2, "0");
@@ -126,14 +166,14 @@ export default function Experience() {
   const project = projects[index];
 
   return (
-    <section className="section projects" id="services" ref={sectionRef}>
+    <section className="section projects" id="projects" ref={sectionRef}>
       <div className="container">
         <SectionHeading
           index="03"
-          eyebrow="Selected work"
-          title="My"
-          accent="Projects"
-          subtitle="Real systems built for real users — from government platforms to deep learning research."
+          eyebrow="Case studies"
+          title="Selected"
+          accent="Work"
+          subtitle="Real systems built for real users — the problem, how I solved it, and what changed."
         />
 
         <Reveal
@@ -194,9 +234,14 @@ export default function Experience() {
                 <motion.p className="project__subtitle" variants={bodyItem}>
                   {project.subtitle}
                 </motion.p>
-                <motion.p className="project__desc" variants={bodyItem}>
-                  {project.description}
-                </motion.p>
+                <motion.dl className="project__case" variants={bodyItem}>
+                  {caseSteps.map((step) => (
+                    <div key={step.key} className="project__case-item">
+                      <dt><Icon name={step.icon} /> {step.label}</dt>
+                      <dd>{project[step.key]}</dd>
+                    </div>
+                  ))}
+                </motion.dl>
                 <motion.div className="tags" variants={bodyItem}>
                   {project.tags.map((tag) => (
                     <span key={tag} className="tag">{tag}</span>
@@ -210,7 +255,7 @@ export default function Experience() {
                     className="btn btn--ghost"
                     aria-label={`View ${project.title} source code on GitHub`}
                   >
-                    <i className="bx bxl-github" /> GitHub
+                    <Icon name="github" /> GitHub
                   </a>
                   {project.liveLink && (
                     <a
@@ -220,7 +265,7 @@ export default function Experience() {
                       className="btn btn--primary"
                       aria-label={`View live ${project.title} website`}
                     >
-                      <i className="bx bx-link-external" /> Live Demo
+                      <Icon name="external-link" /> Live Demo
                     </a>
                   )}
                 </motion.div>
@@ -259,14 +304,16 @@ export default function Experience() {
 
             <div className="projects__arrows">
               <button type="button" className="icon-btn icon-btn--lg" onClick={prev} aria-label="Previous project">
-                <i className="bx bx-left-arrow-alt" />
+                <Icon name="arrow-left" />
               </button>
               <button type="button" className="icon-btn icon-btn--lg" onClick={next} aria-label="Next project">
-                <i className="bx bx-right-arrow-alt" />
+                <Icon name="arrow-right" />
               </button>
             </div>
           </div>
         </Reveal>
+
+        <Testimonials />
       </div>
     </section>
   );

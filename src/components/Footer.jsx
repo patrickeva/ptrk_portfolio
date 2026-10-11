@@ -1,8 +1,9 @@
+import Icon from "./Icon";
 const socials = [
-  { label: 'GitHub',   icon: 'bxl-github',          url: 'https://github.com/patrickeva' },
-  { label: 'LinkedIn', icon: 'bxl-linkedin-square', url: 'https://www.linkedin.com/in/patrickeva/' },
-  { label: 'Facebook', icon: 'bxl-facebook-square', url: 'https://www.facebook.com/ptrkrmseva' },
-  { label: 'Email patrickramoseva@gmail.com', icon: 'bx-envelope', url: 'mailto:patrickramoseva@gmail.com' },
+  { label: 'GitHub',   icon: 'github',          url: 'https://github.com/patrickeva' },
+  { label: 'LinkedIn', icon: 'linkedin', url: 'https://www.linkedin.com/in/patrickeva/' },
+  { label: 'Facebook', icon: 'facebook', url: 'https://www.facebook.com/ptrkrmseva' },
+  { label: 'Email patrickramoseva@gmail.com', icon: 'mail', url: 'mailto:patrickramoseva@gmail.com' },
 ];
 
 export default function Footer() {
@@ -14,6 +15,9 @@ export default function Footer() {
           <p>
             © {new Date().getFullYear()} · <strong>Patrick Eva</strong>
           </p>
+          <a href="/cv/Eva_Resume.pdf" target="_blank" rel="noopener noreferrer" className="footer__cv">
+            <Icon name="file" /> Résumé (PDF)
+          </a>
         </div>
 
         <div className="footer__socials">
@@ -26,7 +30,7 @@ export default function Footer() {
               aria-label={s.label}
               title={s.label}
             >
-              <i className={`bx ${s.icon}`} />
+              <Icon name={s.icon} />
             </a>
           ))}
         </div>

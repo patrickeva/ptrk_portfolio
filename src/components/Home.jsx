@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Magnetic, ease } from "./ui";
+import Icon from "./Icon";
 
 const EMAIL = "patrickramoseva@gmail.com";
 const SUBJECT = "Hello Patrick — let's connect";
@@ -8,7 +9,7 @@ const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`;
 const GMAIL_COMPOSE = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=${encodeURIComponent(SUBJECT)}`;
 
 const details = [
-  { icon: "bx bx-code-alt", text: "Web Developer · Software Engineer" },
+  { icon: "code", text: "Freelance Web & Software Developer" },
 ];
 
 const roles = ["web applications", "full-stack systems", "machine learning solutions"];
@@ -114,14 +115,14 @@ export default function Home({ ready, navigateTo }) {
           </motion.p>
 
           <motion.p className="hero__degree" variants={item}>
-            <i className="bx bxs-graduation" />
+            <Icon name="graduation" />
             Bachelor of Science in Computer Science
           </motion.p>
 
           <motion.ul className="hero__details" variants={item}>
             {details.map((d) => (
               <li key={d.text}>
-                <i className={d.icon} />
+                <Icon name={d.icon} />
                 <span>{d.text}</span>
               </li>
             ))}
@@ -130,19 +131,21 @@ export default function Home({ ready, navigateTo }) {
           <motion.div className="hero__actions" variants={item}>
             <Magnetic>
               <a
-                href="/cv/Eva_Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#services"
                 className="btn btn--primary btn--lg"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateTo("services");
+                }}
               >
-                <i className="bx bx-file" />
-                View Resume
+                <Icon name="briefcase" />
+                View Services
               </a>
             </Magnetic>
 
             <Magnetic>
               <a href={MAILTO} className="btn btn--ghost btn--lg" onClick={handleContactClick}>
-                <i className="bx bx-envelope" /> Contact Me
+                <Icon name="mail" /> Let's Talk
               </a>
             </Magnetic>
           </motion.div>
@@ -183,7 +186,7 @@ export default function Home({ ready, navigateTo }) {
                   </small>
                 </span>
                 <span className="hero__portrait-caption-icon">
-                  <i className="bx bx-code-alt" />
+                  <Icon name="code" />
                 </span>
               </motion.div>
             </div>

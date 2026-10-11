@@ -4,12 +4,12 @@ import Navbar from './components/Navbar'
 import Home from './components/Home'
 import About from './components/About'
 import Skills from './components/Skills'
+import Services from './components/Services'
 import Experience from './components/Experience'
-import Education from './components/Education'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 
-const SECTION_IDS = ['home', 'about', 'skills', 'services', 'education', 'contact']
+const SECTION_IDS = ['home', 'about', 'services', 'projects', 'skills', 'contact']
 const INTRO_KEY = 'intro-seen'
 
 function hasSeenIntro() {
@@ -147,9 +147,9 @@ function App() {
       <main>
         <Home ready={!loading} navigateTo={navigateTo} />
         <About />
-        <Skills />
+        <Services />
         <Experience />
-        <Education />
+        <Skills />
         <Contact />
       </main>
 

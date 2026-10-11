@@ -1,27 +1,28 @@
 import TechStack from "./TechStack";
 import { SectionHeading, Spotlight, ease } from "./ui";
+import { Icon3D } from "./Icon";
 
 const skillGroups = [
   {
-    icon: "bx-code-alt",
+    icon: "desktop_computer",
     title: "Frontend Development",
     description: "Responsive, accessible interfaces built with modern tooling.",
     skills: ["React", "JavaScript", "HTML & CSS", "Tailwind CSS"],
   },
   {
-    icon: "bx-server",
+    icon: "card_file_box",
     title: "Backend & Databases",
     description: "APIs, data models, and full-stack systems that scale.",
     skills: ["Node.js", "PostgreSQL", "Supabase", "Firebase"],
   },
   {
-    icon: "bx-brain",
+    icon: "brain",
     title: "Python & Machine Learning",
     description: "Automation, data processing, and applied ML models.",
     skills: ["Python", "TensorFlow", "CNN", "KNN"],
   },
   {
-    icon: "bx-git-branch",
+    icon: "toolbox",
     title: "Tools & Workflow",
     description: "Version control, builds, and shipping to production.",
     skills: ["Git & GitHub", "Vite", "Deployment", "Problem Solving"],
@@ -33,7 +34,7 @@ export default function Skills() {
     <section className="section skills" id="skills">
       <div className="container">
         <SectionHeading
-          index="02"
+          index="04"
           eyebrow="What I work with"
           title="Skills &"
           accent="Expertise"
@@ -54,7 +55,7 @@ export default function Skills() {
               <span className="skill-card__num">{String(i + 1).padStart(2, "0")}</span>
               <div className="skill-card__top">
                 <span className="icon-tile">
-                  <i className={`bx ${group.icon}`} />
+                  <Icon3D name={group.icon} />
                 </span>
                 <h3>{group.title}</h3>
               </div>
