@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, LayoutGroup, motion, useScroll, useSpring } from "framer-motion";
 import { Magnetic, Reveal, SectionHeading, Spotlight, ease } from "./ui";
-import Icon, { Icon3D } from "./Icon";
+import Icon from "./Icon";
 
 const EMAIL = "patrickramoseva@gmail.com";
 
 // Desktops rarely have a mail app wired to mailto:, so open Gmail's composer there instead.
 function requestQuote(e, topic) {
-  const subject = `Project inquiry — ${topic}`;
+  const subject = `PREtech inquiry — ${topic}`;
   const body = "Hi Patrick,\n\nI'd like to ask about:\n\nProject details:\nTimeline:\nBudget range:\n\nThanks!";
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     e.preventDefault();
@@ -17,7 +17,7 @@ function requestQuote(e, topic) {
 }
 
 const quoteHref = (topic) =>
-  `mailto:${EMAIL}?subject=${encodeURIComponent(`Project inquiry — ${topic}`)}`;
+  `mailto:${EMAIL}?subject=${encodeURIComponent(`PREtech inquiry — ${topic}`)}`;
 
 const categories = [
   { id: "all", label: "All services" },
@@ -42,7 +42,7 @@ const services = [
   {
     id: "websites",
     category: "build",
-    icon: "desktop_computer",
+    icon: "monitor",
     title: "Business & Freelance Websites",
     summary: "Modern websites and landing pages that present your brand, list your services, and turn visitors into inquiries.",
     detail:
@@ -54,7 +54,7 @@ const services = [
   {
     id: "mobile",
     category: "build",
-    icon: "mobile_phone",
+    icon: "smartphone",
     title: "Mobile App Development",
     summary: "Android apps that share one codebase with your web system — built for drivers, field staff, or your customers.",
     detail:
@@ -66,7 +66,7 @@ const services = [
   {
     id: "tracking",
     category: "systems",
-    icon: "world_map",
+    icon: "map",
     title: "Real-Time Tracking & Fleet Systems",
     summary: "Live GPS maps, vehicle tracking, and monitoring dashboards for transport groups, cooperatives, and delivery teams.",
     detail:
@@ -78,7 +78,7 @@ const services = [
   {
     id: "records",
     category: "systems",
-    icon: "classical_building",
+    icon: "landmark",
     title: "LGU & Office Records Systems",
     summary: "Digitize paper processes — permits, franchises, ordinances, and documents — into searchable, trackable systems.",
     detail:
@@ -90,7 +90,7 @@ const services = [
   {
     id: "backend",
     category: "systems",
-    icon: "card_file_box",
+    icon: "database",
     title: "Backend, Database & API Integration",
     summary: "The engine behind your apps — databases, APIs, authentication, file storage, and third-party integrations.",
     detail:
@@ -114,7 +114,7 @@ const services = [
   {
     id: "ai-assistant",
     category: "ai",
-    icon: "robot",
+    icon: "bot",
     title: "AI Chatbots & Assistants",
     summary: "AI assistants that answer customer questions about your business, 24/7, right on your website.",
     detail:
@@ -126,7 +126,7 @@ const services = [
   {
     id: "dashboards",
     category: "ai",
-    icon: "bar_chart",
+    icon: "bar-chart",
     title: "Dashboards & Data Insights",
     summary: "Turn spreadsheets and raw records into clear dashboards, KPIs, and reports your team can act on.",
     detail:
@@ -139,15 +139,15 @@ const services = [
 
 const support = [
   { icon: "wrench", title: "Maintenance & Bug Fixes", text: "Monthly updates, fixes, and security patches so your system stays healthy." },
-  { icon: "artist_palette", title: "Redesign & Modernization", text: "Refresh outdated sites and move old systems to modern, faster tech." },
-  { icon: "globe_with_meridians", title: "Domain, Hosting & Deployment", text: "Domain purchase, DNS, SSL, and deployment on reliable hosting." },
-  { icon: "high_voltage", title: "Speed & SEO Optimization", text: "Faster load times, better Lighthouse scores, and search visibility." },
+  { icon: "palette", title: "Redesign & Modernization", text: "Refresh outdated sites and move old systems to modern, faster tech." },
+  { icon: "globe", title: "Domain, Hosting & Deployment", text: "Domain purchase, DNS, SSL, and deployment on reliable hosting." },
+  { icon: "zap", title: "Speed & SEO Optimization", text: "Faster load times, better Lighthouse scores, and search visibility." },
 ];
 
 const process = [
-  { icon: "speech_balloon", title: "Discover", text: "A free call to understand your goals, users, and budget." },
-  { icon: "memo", title: "Plan & Design", text: "Scope, timeline, and UI mockups you approve before coding." },
-  { icon: "hammer_and_wrench", title: "Build", text: "Weekly progress updates with a live preview link you can test." },
+  { icon: "conversation", title: "Discover", text: "A free call to understand your goals, users, and budget." },
+  { icon: "pencil", title: "Plan & Design", text: "Scope, timeline, and UI mockups you approve before coding." },
+  { icon: "code-curly", title: "Build", text: "Weekly progress updates with a live preview link you can test." },
   { icon: "rocket", title: "Launch", text: "Deployment, domain setup, and a walkthrough for your team." },
   { icon: "shield", title: "Support", text: "Free fixes after launch, then optional monthly maintenance." },
 ];
@@ -169,21 +169,21 @@ const engagements = [
     text: "Best when requirements are clear. One agreed scope, deliverables, and price — no surprises.",
   },
   {
-    icon: "chart_increasing",
+    icon: "trending-up",
     title: "Milestone-Based",
     text: "For bigger or evolving projects. Work is split into phases you approve and pay for one at a time.",
   },
   {
-    icon: "toolbox",
+    icon: "repeat",
     title: "Monthly Maintenance",
     text: "Ongoing updates, fixes, monitoring, and small enhancements for systems already in production.",
   },
 ];
 
 const principles = [
-  { icon: "magnifying_glass_tilted_left", title: "Transparent", text: "Itemized quotes — you see exactly what you pay for." },
-  { icon: "control_knobs", title: "Tailored", text: "Every quote reflects your project's actual scope." },
-  { icon: "check_mark_button", title: "No hidden costs", text: "Changes are discussed and approved before any extra work." },
+  { icon: "eye", title: "Transparent", text: "Itemized quotes — you see exactly what you pay for." },
+  { icon: "sliders", title: "Tailored", text: "Every quote reflects your project's actual scope." },
+  { icon: "badge-check", title: "No hidden costs", text: "Changes are discussed and approved before any extra work." },
   { icon: "key", title: "You own it", text: "Full source code, domain, and accounts are yours." },
 ];
 
@@ -262,7 +262,7 @@ function ServiceModal({ service, onClose }) {
 
         <div className="svc-modal__head">
           <span className="icon-tile">
-            <Icon3D name={service.icon} />
+            <Icon name={service.icon} />
           </span>
           <div>
             <span className="svc-modal__cat">
@@ -337,7 +337,7 @@ function ProcessTimeline() {
             transition={{ duration: 0.6, ease, delay: i * 0.08 }}
           >
             <span className="process__dot">
-              <Icon3D name={step.icon} />
+              <Icon name={step.icon} />
             </span>
             <span className="process__num">Step {String(i + 1).padStart(2, "0")}</span>
             <h4>{step.title}</h4>
@@ -445,7 +445,7 @@ export default function Services() {
                 transition={{ duration: 0.55, ease, delay: (i % 3) * 0.06 }}
               >
                 <span className="svc-card__num">{String(services.indexOf(s) + 1).padStart(2, "0")}</span>
-                <span className="icon-tile"><Icon3D name={s.icon} /></span>
+                <span className="icon-tile"><Icon name={s.icon} /></span>
                 <h3>{s.title}</h3>
                 <p className="svc-card__summary">{s.summary}</p>
                 <ul className="check-list check-list--compact">
@@ -468,7 +468,7 @@ export default function Services() {
           <div className="support-grid">
             {support.map((s, i) => (
               <Reveal key={s.title} className="support-item" delay={i * 0.06}>
-                <Icon3D name={s.icon} />
+                <Icon name={s.icon} />
                 <div>
                   <h4>{s.title}</h4>
                   <p>{s.text}</p>
@@ -515,7 +515,7 @@ export default function Services() {
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.6, ease, delay: i * 0.08 }}
               >
-                <span className="icon-tile"><Icon3D name={e.icon} /></span>
+                <span className="icon-tile"><Icon name={e.icon} /></span>
                 <h4>{e.title}</h4>
                 <p>{e.text}</p>
               </Spotlight>
@@ -525,7 +525,7 @@ export default function Services() {
           <div className="principles">
             {principles.map((p, i) => (
               <Reveal key={p.title} className="principle" delay={i * 0.06}>
-                <Icon3D name={p.icon} />
+                <Icon name={p.icon} />
                 <div>
                   <h4>{p.title}</h4>
                   <p>{p.text}</p>

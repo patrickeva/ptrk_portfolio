@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { ease } from './ui';
 import Icon from './Icon';
+import Brand from './Brand';
 
 const links = [
   { id: 'home',      label: 'Home' },
@@ -57,9 +58,8 @@ export default function Navbar({ activeSection, navigateTo }) {
       transition={{ duration: 0.45, ease }}
     >
       <div className="nav__inner">
-        <a href="#home" className="nav__brand" onClick={(e) => handleNav(e, 'home')}>
-          <img src="/images/pp.jpg" alt="" />
-          <span>Patrick<b>.</b></span>
+        <a href="#home" className="nav__brand" aria-label="PREtech — home" onClick={(e) => handleNav(e, 'home')}>
+          <Brand />
         </a>
 
         <nav className="nav__links" aria-label="Primary">

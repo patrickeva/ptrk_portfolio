@@ -1,16 +1,16 @@
 import TechStack from "./TechStack";
 import { SectionHeading, Spotlight, ease } from "./ui";
-import { Icon3D } from "./Icon";
+import Icon from "./Icon";
 
 const skillGroups = [
   {
-    icon: "desktop_computer",
+    icon: "code",
     title: "Frontend Development",
     description: "Responsive, accessible interfaces built with modern tooling.",
     skills: ["React", "JavaScript", "HTML & CSS", "Tailwind CSS"],
   },
   {
-    icon: "card_file_box",
+    icon: "server",
     title: "Backend & Databases",
     description: "APIs, data models, and full-stack systems that scale.",
     skills: ["Node.js", "PostgreSQL", "Supabase", "Firebase"],
@@ -22,7 +22,7 @@ const skillGroups = [
     skills: ["Python", "TensorFlow", "CNN", "KNN"],
   },
   {
-    icon: "toolbox",
+    icon: "git-branch",
     title: "Tools & Workflow",
     description: "Version control, builds, and shipping to production.",
     skills: ["Git & GitHub", "Vite", "Deployment", "Problem Solving"],
@@ -55,7 +55,7 @@ export default function Skills() {
               <span className="skill-card__num">{String(i + 1).padStart(2, "0")}</span>
               <div className="skill-card__top">
                 <span className="icon-tile">
-                  <Icon3D name={group.icon} />
+                  <Icon name={group.icon} />
                 </span>
                 <h3>{group.title}</h3>
               </div>

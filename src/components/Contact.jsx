@@ -36,7 +36,7 @@ const serviceOptions = [
 const initialForm = { name: "", email: "", service: "", message: "" };
 
 function composeFallback({ name, email, service, message }) {
-  const subject = `Project inquiry — ${service || "New project"}`;
+  const subject = `PREtech inquiry — ${service || "New project"}`;
   const body = `Hi Patrick,\n\n${message}\n\n— ${name}\n${email}`;
   // Desktops rarely have a mail app wired to mailto:, so open Gmail's composer there instead.
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {

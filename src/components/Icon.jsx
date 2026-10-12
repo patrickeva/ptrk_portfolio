@@ -7,13 +7,23 @@ import {
   LuListChecks, LuMail, LuMap, LuMapPin, LuMenu, LuMessageCircle, LuMessagesSquare, LuMilestone,
   LuMoon, LuMusic, LuPencilRuler, LuPlus, LuReceipt, LuRefreshCw, LuRepeat, LuRocket, LuScale,
   LuSend, LuServer, LuSettings, LuShieldCheck, LuSlidersHorizontal, LuSmartphone, LuStore, LuSun,
-  LuUser, LuUserCheck, LuUserPlus, LuWrench, LuX,
+  LuUser, LuUserCheck, LuUserPlus, LuWrench, LuX, LuLaptop, LuMonitor, LuDatabase, LuPalette, LuZap,
+  LuLandmark, LuClipboardList, LuTrendingUp, LuArrowUp,
 } from "react-icons/lu";
 import { FaFacebook, FaGithub, FaLinkedin } from "react-icons/fa6";
 
 const icons = {
   "app-window": LuAppWindow,
+  laptop: LuLaptop,
+  monitor: LuMonitor,
+  database: LuDatabase,
+  palette: LuPalette,
+  zap: LuZap,
+  landmark: LuLandmark,
+  clipboard: LuClipboardList,
+  "trending-up": LuTrendingUp,
   "arrow-left": LuArrowLeft,
+  "arrow-up": LuArrowUp,
   "arrow-right": LuArrowRight,
   "badge-check": LuBadgeCheck,
   "bar-chart": LuChartColumn,
@@ -99,18 +109,3 @@ export default function Icon({ name, className = "" }) {
   );
 }
 
-// Fluent 3D icons (Microsoft, MIT license), served from /public/icons/3d.
-export function Icon3D({ name, size = 128, className = "" }) {
-  return (
-    <img
-      className={`icon-3d ${className}`.trim()}
-      src={`/icons/3d/${name}.webp`}
-      alt=""
-      width={size}
-      height={size}
-      loading="lazy"
-      decoding="async"
-      draggable="false"
-    />
-  );
-}

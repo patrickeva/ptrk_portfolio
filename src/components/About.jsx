@@ -1,11 +1,11 @@
 import { CountUp, Reveal, SectionHeading, Spotlight, ease } from "./ui";
-import Icon, { Icon3D } from "./Icon";
+import Icon from "./Icon";
 
 const highlights = [
-  { icon: "laptop",     label: "Web Developer", value: "Front-end & Full-stack" },
+  { icon: "code",     label: "Web Developer", value: "Front-end & Full-stack" },
   { icon: "brain",        label: "ML Engineer",   value: "Deep Learning & AI" },
-  { icon: "graduation_cap",  label: "CS Graduate",   value: "NU Lipa · 2022–2026" },
-  { icon: "round_pushpin",      label: "Location",      value: "Cuenca, Batangas" },
+  { icon: "graduation",  label: "CS Graduate",   value: "NU Lipa · 2022–2026" },
+  { icon: "map-pin",      label: "Location",      value: "Cuenca, Batangas" },
 ];
 
 const stats = [
@@ -59,8 +59,8 @@ export default function About() {
             </Reveal>
 
             <Reveal as="p" className="about__lead" delay={0.05}>
-              Hi! I'm <strong>Patrick Eva</strong>, a Full-Stack Developer from Cuenca, Batangas
-              building clean web apps and practical AI solutions for real-world problems.
+              Hi! I'm <strong>Patrick Eva</strong>, the developer behind PREtech — a Full-Stack
+              Developer from Cuenca, Batangas building clean web apps and practical AI solutions.
             </Reveal>
 
             <div className="about__highlights">
@@ -74,7 +74,7 @@ export default function About() {
                   transition={{ duration: 0.6, ease, delay: 0.15 + i * 0.08 }}
                 >
                   <span className="icon-tile">
-                    <Icon3D name={h.icon} />
+                    <Icon name={h.icon} />
                   </span>
                   <span className="highlight__text">
                     <span className="highlight__label">{h.label}</span>

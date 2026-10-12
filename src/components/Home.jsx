@@ -2,17 +2,28 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Magnetic, ease } from "./ui";
 import Icon from "./Icon";
+import Brand from "./Brand";
 
 const EMAIL = "patrickramoseva@gmail.com";
-const SUBJECT = "Hello Patrick — let's connect";
+const SUBJECT = "PREtech inquiry — let's talk";
 const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`;
 const GMAIL_COMPOSE = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=${encodeURIComponent(SUBJECT)}`;
 
-const details = [
-  { icon: "code", text: "Freelance Web & Software Developer" },
+const audiences = ["small businesses", "LGUs & offices", "transport cooperatives", "startups"];
+
+const offerings = [
+  { icon: "laptop", text: "Web Apps" },
+  { icon: "smartphone", text: "Mobile Apps" },
+  { icon: "map", text: "Tracking Systems" },
+  { icon: "brain", text: "AI Solutions" },
 ];
 
-const roles = ["web applications", "full-stack systems", "machine learning solutions"];
+// Screens from shipped projects, layered in the hero showcase.
+const screens = [
+  { src: "/images/franchiseBG.png", alt: "Tricycle Franchise Tracker", className: "showcase__screen--back-left" },
+  { src: "/images/sbBackground.png", alt: "Cuenca Legislative Tracker", className: "showcase__screen--back-right" },
+  { src: "/images/BusTracking.png", alt: "BMTC Minibus Tracker", className: "showcase__screen--front" },
+];
 
 const content = {
   hidden: {},
@@ -24,36 +35,36 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.9, ease } },
 };
 
-const nameLine = {
+const titleLine = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.035 } },
+  show: { transition: { staggerChildren: 0.06 } },
 };
 
-const char = {
+const word = {
   hidden: { y: "110%" },
   show: { y: "0%", transition: { duration: 1, ease } },
 };
 
-function SplitChars({ text }) {
-  return text.split("").map((c, i) => (
-    <span className="char-mask" key={i}>
-      <motion.span className="char" variants={char}>
-        {c}
+function SplitWords({ text, className }) {
+  return text.split(" ").map((w, i) => (
+    <span className="word-mask" key={i}>
+      <motion.span className={className ? `word ${className}` : "word"} variants={word}>
+        {w}
       </motion.span>
     </span>
   ));
 }
 
 export default function Home({ ready, navigateTo }) {
-  const [roleIdx, setRoleIdx] = useState(0);
+  const [audienceIdx, setAudienceIdx] = useState(0);
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [10, -10]), { stiffness: 150, damping: 18 });
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-10, 10]), { stiffness: 150, damping: 18 });
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [8, -8]), { stiffness: 150, damping: 18 });
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-8, 8]), { stiffness: 150, damping: 18 });
 
   useEffect(() => {
-    const t = setInterval(() => setRoleIdx((i) => (i + 1) % roles.length), 2800);
+    const t = setInterval(() => setAudienceIdx((i) => (i + 1) % audiences.length), 2800);
     return () => clearInterval(t);
   }, []);
 
@@ -82,48 +93,44 @@ export default function Home({ ready, navigateTo }) {
     <section className="hero" id="home">
       <div className="container hero__grid">
         <motion.div className="hero__content" variants={content} initial="hidden" animate={state}>
+          <motion.span className="hero__badge" variants={item}>
+            <span className="hero__badge-dot" aria-hidden="true" />
+            <strong>PREtech</strong>
+            <span className="hero__badge-sep" aria-hidden="true" />
+            Freelance Software Studio
+          </motion.span>
 
-          <h1 className="hero__name" aria-label="Patrick Eva">
-            <motion.span className="hero__name-line" variants={nameLine} aria-hidden="true">
-              <SplitChars text="Patrick" />
+          <h1 className="hero__title" aria-label="Software that solves real business problems.">
+            <motion.span className="hero__title-line" variants={titleLine} aria-hidden="true">
+              <SplitWords text="Software that solves" />
             </motion.span>
-            <span className="hero__name-line" aria-hidden="true">
-              <span className="char-mask">
-                <motion.span className="char gradient-text" variants={char}>
-                  Eva
-                </motion.span>
-              </span>
-            </span>
+            <motion.span className="hero__title-line" variants={titleLine} aria-hidden="true">
+              <SplitWords text="real business problems." className="gradient-text" />
+            </motion.span>
           </h1>
 
-          <motion.p className="hero__role" variants={item}>
-            I build
+          <motion.p className="hero__lead" variants={item}>
+            Web apps, mobile apps, tracking systems, and AI solutions for
             <span className="hero__rotator">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span
-                  key={roleIdx}
-                  className="gradient-text"
+                  key={audienceIdx}
                   initial={{ y: "100%", opacity: 0 }}
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.6, ease }}
                 >
-                  {roles[roleIdx]}
+                  {audiences[audienceIdx]}
                 </motion.span>
               </AnimatePresence>
             </span>
           </motion.p>
 
-          <motion.p className="hero__degree" variants={item}>
-            <Icon name="graduation" />
-            Bachelor of Science in Computer Science
-          </motion.p>
-
           <motion.ul className="hero__details" variants={item}>
-            {details.map((d) => (
-              <li key={d.text}>
-                <Icon name={d.icon} />
-                <span>{d.text}</span>
+            {offerings.map((o) => (
+              <li key={o.text}>
+                <Icon name={o.icon} />
+                <span>{o.text}</span>
               </li>
             ))}
           </motion.ul>
@@ -149,47 +156,52 @@ export default function Home({ ready, navigateTo }) {
               </a>
             </Magnetic>
           </motion.div>
+
+          <motion.p className="hero__founder" variants={item}>
+            Founded &amp; built by <strong>Patrick Eva</strong> · BS Computer Science
+          </motion.p>
         </motion.div>
 
         <motion.div
           className="hero__visual"
           onMouseMove={handleTilt}
           onMouseLeave={resetTilt}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }}
           transition={{ duration: 1.2, ease, delay: 0.35 }}
         >
-          <motion.div className="hero__portrait" style={{ rotateX, rotateY }}>
-            <div className="hero__portrait-glow" />
-            <motion.div
-              className="hero__portrait-back"
-              initial={{ rotate: 0, x: 0, y: 0, opacity: 0 }}
-              animate={ready ? { rotate: 6, x: 22, y: 12, opacity: 1 } : {}}
-              transition={{ duration: 1.2, ease, delay: 0.7 }}
-            />
-            <div className="hero__portrait-dots hero__portrait-dots--tr" />
-            <div className="hero__portrait-dots hero__portrait-dots--bl" />
-            <div className="hero__portrait-ring" />
-            <div className="hero__portrait-frame">
-              <img src="/images/pp.jpg" alt="Patrick Eva" />
-              <motion.div
-                className="hero__portrait-caption"
-                initial={{ opacity: 0, y: 16 }}
+          <motion.div className="showcase" style={{ rotateX, rotateY }}>
+            <div className="showcase__glow" aria-hidden="true" />
+
+            {screens.map((s, i) => (
+              <motion.figure
+                key={s.src}
+                className={`showcase__screen ${s.className}`}
+                initial={{ opacity: 0, y: 40 }}
                 animate={ready ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, ease, delay: 1.1 }}
+                transition={{ duration: 1, ease, delay: 0.5 + i * 0.15 }}
               >
-                <span>
-                  <strong>Patrick Eva</strong>
-                  <small>
-                    <span className="hero__portrait-status" />
-                    Cuenca, Batangas
-                  </small>
-                </span>
-                <span className="hero__portrait-caption-icon">
-                  <Icon name="code" />
-                </span>
-              </motion.div>
-            </div>
+                <div className="showcase__bar" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <img src={s.src} alt={s.alt} />
+              </motion.figure>
+            ))}
+
+            <motion.div
+              className="showcase__card"
+              initial={{ opacity: 0, y: 16 }}
+              animate={ready ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, ease, delay: 1.1 }}
+            >
+              <Brand />
+              <small>
+                <span className="hero__badge-dot" aria-hidden="true" />
+                Available for new projects
+              </small>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>
@@ -206,7 +218,6 @@ export default function Home({ ready, navigateTo }) {
         <span className="hero__mouse" />
         Scroll
       </motion.button>
-
     </section>
   );
 }
