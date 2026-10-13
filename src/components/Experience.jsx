@@ -89,7 +89,7 @@ const projects = [
     link: "https://github.com/itzjmbruhhh/coffee_leaf_diseases_classifier",
   },
   {
-    image: "/images/myPortfolio.png",
+    image: "/images/portfolioBG.png",
     title: "Personal Portfolio",
     subtitle: "Frontend · React Portfolio Website",
     challenge:
@@ -100,6 +100,7 @@ const projects = [
       "The site you're on right now.",
     tags: ["React", "Framer Motion", "CSS3", "Vite"],
     link: "https://github.com/patrickeva/ptrk_portfolio",
+    liveLink: "https://ptrkportfolio.vercel.app/",
   },
   {
     image: "/images/NU_Admission.jpg",
